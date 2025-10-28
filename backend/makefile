@@ -1,7 +1,7 @@
 include .env
 
 .PHONY: generate
-generate: init sqlc swagger mock
+generate: init sqlc vert swagger mock
 
 .PHONY: init
 init:
@@ -29,6 +29,11 @@ sqlc:
 	find ./generate/psql -type f -exec sed -i '' -e 's/DBTX/PDBTX/g' -e 's/Querier/PQuerier/g' {} +
 	pg_dump --schema-only --no-owner --no-privileges --no-tablespaces --no-security-labels --exclude-table=_gooses ${GOOSE_DBSTRING} > generate/raw.sql
 	awk '/^CREATE TABLE/,/^\);$$/' generate/raw.sql > generate/schema.sql
+
+.PHONY: vert
+vert:
+	find ./generate/convert -type f -exec sed -i '' '/^\/\/go:build !goverter/d' {} +
+	goverter gen -g 'skipCopySameType yes' ./...
 
 .PHONY: swagger
 swagger:
