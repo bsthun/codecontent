@@ -52,3 +52,11 @@ type CourseListByManagerResponse struct {
 	Items []*CourseExtended `json:"items"`
 	Count *uint64           `json:"count"`
 }
+
+type CourseIdRequest struct {
+	CourseId *uint64 `json:"courseId" validate:"required"`
+}
+
+type CourseWrapper struct {
+	Course *Course `json:"course"`
+}

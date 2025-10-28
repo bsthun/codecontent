@@ -67,16 +67,20 @@
   }
   ```
 
-- If request has only entity id, e.g. only `UserId`, use or create a struct for it with name `#entityName#IdRequest`, as
-  example:
+- If request has only id, do not create request struct, but use or create shared struct for it with name
+  `#entityName#IdRequest`, as well as response has only one entity will use `#entityName#Wrapper, as example:
   ```go
   package payload
   type UserIdRequest struct {
       UserId *int64 `json:"userId"`
   }
+  type CourseWrapper struct {
+      Course *Course `json:"course"`
+  }
   ```
 
-- If request has other fields, use or create a struct with name `#endpointName#Request`, as example:
+- If request has many fields, case of match an entity, use the entity struct without create request payload, otherwise
+  use or create a struct with name `#endpointName#Request`, as example:
   ```go
   package payload
   type ExamSubmissionCompareRequest struct {
@@ -242,3 +246,46 @@
 - Always use *uint64 for Id, Count, Limit, Offset everywhere.
 - Always use `make generate` after changing anything / when finished the task, it generates sqlc / goverter / swagger /
   mockerry, and code testing. Use it as build test and use only this command instead of run individually.
+
+# Project Specific
+
+- Always add userId to the request payload, and use body for calling procedure, however it must check actionable, just
+  like
+  ```go
+  func (r *Handler) HandleCourseListManager(c *fiber.Ctx) error {
+    // * get user claims
+    l := c.Locals("l").(*jwt.Token).Claims.(*common.LoginClaims)
+
+    // * parse body
+    body := new(payload.CourseListByManagerRequest)
+    if err := c.BodyParser(body); err != nil {
+        return gut.Err(false, "invalid body", err)
+    }
+
+    // * validate body
+    if err := gut.Validate(body); err != nil {
+        return err
+    }
+
+    // * permission act
+    er := r.permissionProcedure.Act(c.Context(), l.UserId, body.UserId)
+    if er != nil {
+        return er
+    }
+
+    // * call procedure
+    items, count, er := r.courseProcedure.CourseListByManager(c.Context(), body.UserId, body.Name, body.Limit, body.Offset)
+    if er != nil {
+        return er
+    }
+
+    // * return
+    return c.JSON(response.Success(c, &payload.CourseListByManagerResponse{
+        Items: items,
+        Count: count,
+    }))
+  }
+  ```
+- For course endpoint, read endpoint must check for act, write endpoint, must use r.permissionProcedure.CourseManage
+- (CourseManage(ctx context.Context, userId *uint64, courseId *uint64, level *string) *gut.ErrorInstance), use level
+  as "manage"

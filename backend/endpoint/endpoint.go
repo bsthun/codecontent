@@ -37,6 +37,8 @@ func Bind(
 	// * course endpoints
 	courses := api.Group("/courses", middleware.Jwt(true))
 	courses.Post("/create", courseEndpoint.HandleCourseCreate)
+	courses.Post("/edit", courseEndpoint.HandleCourseEdit)
+	courses.Post("/delete", courseEndpoint.HandleCourseDelete)
 	courses.Post("/list/manager", courseEndpoint.HandleCourseListManager)
 
 	// * frontend
