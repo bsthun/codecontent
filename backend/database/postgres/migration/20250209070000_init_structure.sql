@@ -16,98 +16,96 @@ CREATE TABLE users
     updated_at  TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE collections
+CREATE TABLE topics
+(
+    id           BIGSERIAL PRIMARY KEY,
+    name         VARCHAR(255) NOT NULL,
+    label        VARCHAR(255) NOT NULL,
+    embedding_no BIGINT       NOT NULL,
+    created_at   TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at   TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE courses
+(
+    id                BIGSERIAL PRIMARY KEY,
+    name              VARCHAR(255) NOT NULL,
+    description       TEXT         NULL,
+    prompt_instruction TEXT         NULL,
+    created_at        TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at        TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE course_managers
 (
     id         BIGSERIAL PRIMARY KEY,
-    name       VARCHAR(255) NOT NULL,
-    metadata   JSONB        NOT NULL,
-    created_at TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP
-);
-
-CREATE TABLE collection_questions
-(
-    id            BIGSERIAL PRIMARY KEY,
-    collection_id BIGINT REFERENCES collections (id) ON DELETE CASCADE NOT NULL,
-    order_num     INTEGER                                              NOT NULL,
-    title         VARCHAR(255)                                         NOT NULL,
-    description   TEXT                                                 NULL,
-    check_query   TEXT                                                 NOT NULL,
-    check_prompt  TEXT                                                 NOT NULL,
-    created_at    TIMESTAMP                                            NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at    TIMESTAMP                                            NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    UNIQUE (collection_id, order_num)
-);
-
-CREATE TABLE semesters
-(
-    id         BIGSERIAL PRIMARY KEY,
-    name       VARCHAR(255) NOT NULL,
-    created_at TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP
-);
-
-CREATE TABLE classes
-(
-    id            BIGSERIAL PRIMARY KEY,
-    semester_id   BIGINT REFERENCES semesters (id) ON DELETE CASCADE NOT NULL,
-    code          VARCHAR(255)                                       NOT NULL,
-    name          VARCHAR(255)                                       NOT NULL,
-    register_code VARCHAR(64)                                        NOT NULL UNIQUE,
-    created_at    TIMESTAMP                                          NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at    TIMESTAMP                                          NOT NULL DEFAULT CURRENT_TIMESTAMP
-);
-
-CREATE TABLE class_joinees
-(
-    id         BIGSERIAL PRIMARY KEY,
-    class_id   BIGINT REFERENCES classes (id) ON DELETE CASCADE NOT NULL,
+    course_id  BIGINT REFERENCES courses (id) ON DELETE CASCADE NOT NULL,
     user_id    BIGINT REFERENCES users (id) ON DELETE CASCADE   NOT NULL,
     created_at TIMESTAMP                                        NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP                                        NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    UNIQUE (class_id, user_id)
+    UNIQUE (course_id, user_id)
 );
 
-CREATE TABLE exams
+CREATE TABLE enrolls
 (
-    id            BIGSERIAL PRIMARY KEY,
-    class_id      BIGINT REFERENCES classes (id) ON DELETE CASCADE      NOT NULL,
-    collection_id BIGINT REFERENCES collections (id) ON DELETE RESTRICT NOT NULL,
-    name          VARCHAR(255)                                          NOT NULL,
-    access_code   VARCHAR(64)                                           NOT NULL,
-    opened_at     TIMESTAMP                                             NOT NULL,
-    closed_at     TIMESTAMP                                             NOT NULL,
-    created_at    TIMESTAMP                                             NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at    TIMESTAMP                                             NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    UNIQUE (class_id, access_code)
+    id         BIGSERIAL PRIMARY KEY,
+    course_id  BIGINT REFERENCES courses (id) ON DELETE CASCADE NOT NULL,
+    user_id    BIGINT REFERENCES users (id) ON DELETE CASCADE   NOT NULL,
+    created_at TIMESTAMP                                        NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP                                        NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE (course_id, user_id)
 );
 
-CREATE TABLE exam_questions
+CREATE TABLE contents
 (
-    id                   BIGSERIAL PRIMARY KEY,
-    exam_id              BIGINT REFERENCES exams (id) ON DELETE CASCADE                 NOT NULL,
-    original_question_id BIGINT REFERENCES collection_questions (id) ON DELETE RESTRICT NOT NULL,
-    order_num            INTEGER                                                        NOT NULL,
-    title                VARCHAR(255)                                                   NOT NULL,
-    description          TEXT                                                           NULL,
-    check_query          TEXT                                                           NOT NULL,
-    check_prompt         TEXT                                                           NOT NULL,
-    created_at           TIMESTAMP                                                      NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at           TIMESTAMP                                                      NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    UNIQUE (exam_id, order_num)
+    id         BIGSERIAL PRIMARY KEY,
+    enroll_id  BIGINT REFERENCES enrolls (id) ON DELETE CASCADE NOT NULL,
+    title      VARCHAR(255)                                          NOT NULL,
+    created_at TIMESTAMP                                             NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP                                             NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE exam_attempts
+CREATE TABLE content_sections
 (
-    id              BIGSERIAL PRIMARY KEY,
-    exam_id         BIGINT REFERENCES exams (id) ON DELETE CASCADE         NOT NULL,
-    class_joinee_id BIGINT REFERENCES class_joinees (id) ON DELETE CASCADE NOT NULL,
-    started_at      TIMESTAMP                                              NULL,
-    finished_at     TIMESTAMP                                              NULL,
-    database_name   VARCHAR(255)                                           NULL,
-    created_at      TIMESTAMP                                              NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at      TIMESTAMP                                              NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    UNIQUE (exam_id, class_joinee_id)
+    id          BIGSERIAL PRIMARY KEY,
+    content_id  BIGINT REFERENCES contents (id) ON DELETE CASCADE NOT NULL,
+    section_no  INTEGER                                              NOT NULL,
+    title       VARCHAR(255)                                         NOT NULL,
+    subtitle    VARCHAR(255)                                         NULL,
+    content     TEXT                                                 NULL,
+    created_at  TIMESTAMP                                            NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at  TIMESTAMP                                            NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE (content_id, section_no)
+);
+
+CREATE TABLE content_logs
+(
+    id         BIGSERIAL PRIMARY KEY,
+    content_id BIGINT REFERENCES contents (id) ON DELETE CASCADE NOT NULL,
+    prompt     TEXT                                                 NOT NULL,
+    call       JSONB                                                NOT NULL,
+    created_at TIMESTAMP                                            NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP                                            NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE course_photos
+(
+    id          BIGSERIAL PRIMARY KEY,
+    course_id   BIGINT REFERENCES courses (id) ON DELETE CASCADE NOT NULL,
+    title       VARCHAR(255)                                         NOT NULL,
+    description TEXT                                                 NULL,
+    created_at  TIMESTAMP                                            NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at  TIMESTAMP                                            NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE content_section_photos
+(
+    id                  BIGSERIAL PRIMARY KEY,
+    content_section_id  BIGINT REFERENCES content_sections (id) ON DELETE CASCADE NOT NULL,
+    course_photo_id     BIGINT REFERENCES course_photos (id) ON DELETE CASCADE     NOT NULL,
+    created_at          TIMESTAMP                                                NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at          TIMESTAMP                                                NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE (content_section_id, course_photo_id)
 );
 
 -- * auto-update function for updated_at timestamps
@@ -127,57 +125,57 @@ CREATE TRIGGER auto_updated_at_users
     FOR EACH ROW
 EXECUTE FUNCTION auto_updated_at();
 
-CREATE TRIGGER auto_updated_at_collections
+CREATE TRIGGER auto_updated_at_topics
     BEFORE UPDATE
-    ON collections
+    ON topics
     FOR EACH ROW
 EXECUTE FUNCTION auto_updated_at();
 
-CREATE TRIGGER auto_updated_at_collection_questions
+CREATE TRIGGER auto_updated_at_courses
     BEFORE UPDATE
-    ON collection_questions
+    ON courses
     FOR EACH ROW
 EXECUTE FUNCTION auto_updated_at();
 
-CREATE TRIGGER auto_updated_at_semesters
+CREATE TRIGGER auto_updated_at_course_managers
     BEFORE UPDATE
-    ON semesters
+    ON course_managers
     FOR EACH ROW
 EXECUTE FUNCTION auto_updated_at();
 
-CREATE TRIGGER auto_updated_at_classes
+CREATE TRIGGER auto_updated_at_enrolls
     BEFORE UPDATE
-    ON classes
+    ON enrolls
     FOR EACH ROW
 EXECUTE FUNCTION auto_updated_at();
 
-CREATE TRIGGER auto_updated_at_class_joinees
+CREATE TRIGGER auto_updated_at_contents
     BEFORE UPDATE
-    ON class_joinees
+    ON contents
     FOR EACH ROW
 EXECUTE FUNCTION auto_updated_at();
 
-CREATE TRIGGER auto_updated_at_exams
+CREATE TRIGGER auto_updated_at_content_sections
     BEFORE UPDATE
-    ON exams
+    ON content_sections
     FOR EACH ROW
 EXECUTE FUNCTION auto_updated_at();
 
-CREATE TRIGGER auto_updated_at_exam_questions
+CREATE TRIGGER auto_updated_at_content_logs
     BEFORE UPDATE
-    ON exam_questions
+    ON content_logs
     FOR EACH ROW
 EXECUTE FUNCTION auto_updated_at();
 
-CREATE TRIGGER auto_updated_at_exam_attempts
+CREATE TRIGGER auto_updated_at_course_photos
     BEFORE UPDATE
-    ON exam_attempts
+    ON course_photos
     FOR EACH ROW
 EXECUTE FUNCTION auto_updated_at();
 
-CREATE TRIGGER auto_updated_at_exam_submissions
+CREATE TRIGGER auto_updated_at_content_section_photos
     BEFORE UPDATE
-    ON exam_submissions
+    ON content_section_photos
     FOR EACH ROW
 EXECUTE FUNCTION auto_updated_at();
 
@@ -185,15 +183,15 @@ EXECUTE FUNCTION auto_updated_at();
 
 -- +goose Down
 -- +goose StatementBegin
-DROP TABLE exam_submissions;
-DROP TABLE exam_attempts;
-DROP TABLE exam_questions;
-DROP TABLE exams;
-DROP TABLE class_joinees;
-DROP TABLE classes;
-DROP TABLE semesters;
-DROP TABLE collection_questions;
-DROP TABLE collections;
+DROP TABLE content_section_photos;
+DROP TABLE course_photos;
+DROP TABLE content_logs;
+DROP TABLE content_sections;
+DROP TABLE contents;
+DROP TABLE enrolls;
+DROP TABLE course_managers;
+DROP TABLE courses;
+DROP TABLE topics;
 DROP TABLE users;
 DROP FUNCTION auto_updated_at;
 -- +goose StatementEnd
