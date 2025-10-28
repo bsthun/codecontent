@@ -53,14 +53,14 @@
 <Container class="flex min-h-dvh items-center justify-center">
 	<div class="card mx-4 w-full max-w-md bg-base-100 shadow-xl">
 		<div class="card-body text-center">
-			<h2 class="card-title justify-center">
+			<h2 class="card-title text-base-content justify-center">
 				Processing Login
 			</h2>
 			<p class="text-base-content/70 mb-6">
 				Please wait while we verify your credentials
 			</p>
 			<div class="mb-4 flex justify-center">
-				<div class="loading loading-spinner loading-lg text-primary"></div>
+				<div class="loading loading-spinner loading-lg text-base-content"></div>
 			</div>
 		</div>
 	</div>

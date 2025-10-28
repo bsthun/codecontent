@@ -22,7 +22,7 @@
 <Container class="flex min-h-dvh items-center justify-center">
 	<div class="card mx-4 w-full max-w-md bg-base-100 shadow-xl">
 		<div class="card-body">
-			<h2 class="card-title">Login</h2>
+			<h2 class="card-title text-base-content">Login</h2>
 			<p class="text-base-content/70 mb-6">Sign in to your account</p>
 			<div class="card-actions">
 				<button class="btn btn-primary w-full" disabled={loading} on:click={handleLogin}>
