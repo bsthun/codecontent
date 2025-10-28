@@ -11,6 +11,7 @@ import (
 	publicEndpoint "backend/endpoint/public"
 	stateEndpoint "backend/endpoint/state"
 	courseProcedure "backend/procedure/course"
+	permissionProcedure "backend/procedure/permission"
 	"backend/type/common"
 	"embed"
 
@@ -37,6 +38,7 @@ func main() {
 			database.Init,
 			fiber.Init,
 			middleware.Init,
+			permissionProcedure.Proceed,
 			courseProcedure.Proceed,
 			publicEndpoint.Handle,
 			stateEndpoint.Handle,

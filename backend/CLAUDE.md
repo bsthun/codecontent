@@ -208,6 +208,7 @@
 - If a field is JSONB, it will be declared in `sqlc.yml` to map to `/type/tuple` struct, so always treats them as struct
   and do not handle json marshal / unmarshal manually, for blank value, use `[]byte("{}")` as basis.
 - All timestamp fields are `*time.Time` and the payload must be `*time.Time` as well.
+- See `/generate/psql/querier.go` for list of queriers to use, do not create new querier if existing one can be used.
 
 ## Implementation
 

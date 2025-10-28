@@ -19,7 +19,7 @@ type Procedure struct {
 
 func Proceed(
 	database common.Database,
-) *Procedure {
+) Proc {
 	return &Procedure{
 		database: database,
 	}

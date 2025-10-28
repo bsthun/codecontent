@@ -5,18 +5,16 @@ import (
 	"backend/type/common"
 	"context"
 
+	"net/url"
+
 	"github.com/bsthun/gut"
 	"github.com/coreos/go-oidc/v3/oidc"
 	"golang.org/x/oauth2"
-	"gorm.io/gorm"
-
-	"net/url"
 )
 
 type Handler struct {
 	config       *config.Config
 	database     common.Database
-	gorm         *gorm.DB
 	OidcProvider *oidc.Provider
 	OidcVerifier *oidc.IDTokenVerifier
 	Oauth2Config *oauth2.Config
@@ -25,12 +23,10 @@ type Handler struct {
 func Handle(
 	config *config.Config,
 	database common.Database,
-	gorm *gorm.DB,
 ) *Handler {
 	handler := &Handler{
 		config:       config,
 		database:     database,
-		gorm:         gorm,
 		OidcProvider: nil,
 		OidcVerifier: nil,
 		Oauth2Config: nil,

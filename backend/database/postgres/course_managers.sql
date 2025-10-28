@@ -44,3 +44,8 @@ SELECT COALESCE(COUNT(*), 0)::BIGINT AS course_manager_count
 FROM course_managers
 WHERE (sqlc.narg(courseId)::BIGINT IS NULL OR course_managers.course_id = sqlc.narg(courseId)::BIGINT)
   AND (sqlc.narg(userId)::BIGINT IS NULL OR course_managers.user_id = sqlc.narg(userId)::BIGINT);
+
+-- name: CourseManagerGetByUserAndCourse :one
+SELECT *
+FROM course_managers
+WHERE user_id = $1 AND course_id = $2;
