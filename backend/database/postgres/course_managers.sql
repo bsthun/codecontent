@@ -28,8 +28,8 @@ SELECT sqlc.embed(course_managers),
 FROM course_managers
 LEFT JOIN courses ON course_managers.course_id = courses.id
 LEFT JOIN users ON course_managers.user_id = users.id
-WHERE (sqlc.narg(courseId)::BIGINT IS NULL OR course_managers.course_id = sqlc.narg(courseId)::BIGINT)
-  AND (sqlc.narg(userId)::BIGINT IS NULL OR course_managers.user_id = sqlc.narg(userId)::BIGINT)
+WHERE (sqlc.narg(course_id)::BIGINT IS NULL OR course_managers.course_id = sqlc.narg(course_id)::BIGINT)
+  AND (sqlc.narg(user_id)::BIGINT IS NULL OR course_managers.user_id = sqlc.narg(user_id)::BIGINT)
 GROUP BY course_managers.id, courses.id, users.id
 ORDER BY
   CASE WHEN sqlc.narg('sort') = 'createdAt' AND COALESCE(sqlc.narg('order'), 'asc') = 'asc' THEN course_managers.created_at END,
@@ -42,8 +42,8 @@ OFFSET COALESCE(sqlc.narg('offset')::BIGINT, 0);
 -- name: CourseManagerCount :one
 SELECT COALESCE(COUNT(*), 0)::BIGINT AS course_manager_count
 FROM course_managers
-WHERE (sqlc.narg(courseId)::BIGINT IS NULL OR course_managers.course_id = sqlc.narg(courseId)::BIGINT)
-  AND (sqlc.narg(userId)::BIGINT IS NULL OR course_managers.user_id = sqlc.narg(userId)::BIGINT);
+WHERE (sqlc.narg(course_id)::BIGINT IS NULL OR course_managers.course_id = sqlc.narg(course_id)::BIGINT)
+  AND (sqlc.narg(user_id)::BIGINT IS NULL OR course_managers.user_id = sqlc.narg(user_id)::BIGINT);
 
 -- name: CourseManagerGetByUserAndCourse :one
 SELECT *

@@ -53,6 +53,30 @@ type CourseListByManagerResponse struct {
 	Count *uint64           `json:"count"`
 }
 
+type CourseListByEnrollRequest struct {
+	UserId *uint64 `json:"userId" validate:"required"`
+	Name   *string `json:"name"`
+	Limit  *uint64 `json:"limit"`
+	Offset *uint64 `json:"offset"`
+}
+
+type CourseListByEnrollResponse struct {
+	Items []*CourseExtended `json:"items"`
+	Count *uint64           `json:"count"`
+}
+
+type CourseListExploreRequest struct {
+	UserId *uint64 `json:"userId" validate:"required"`
+	Name   *string `json:"name"`
+	Limit  *uint64 `json:"limit"`
+	Offset *uint64 `json:"offset"`
+}
+
+type CourseListExploreResponse struct {
+	Items []*CourseExtended `json:"items"`
+	Count *uint64           `json:"count"`
+}
+
 type CourseIdRequest struct {
 	CourseId *uint64 `json:"courseId" validate:"required"`
 }

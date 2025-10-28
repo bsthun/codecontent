@@ -27,7 +27,7 @@ SELECT content_logs.id, content_logs.content_id, content_logs.created_at, conten
        contents.id, contents.enroll_id, contents.title, contents.created_at, contents.updated_at
 FROM content_logs
 LEFT JOIN contents ON content_logs.content_id = contents.id
-WHERE (sqlc.narg(contentId)::BIGINT IS NULL OR content_logs.content_id = sqlc.narg(contentId)::BIGINT)
+WHERE (sqlc.narg(content_id)::BIGINT IS NULL OR content_logs.content_id = sqlc.narg(content_id)::BIGINT)
 GROUP BY content_logs.id, contents.id
 ORDER BY
   CASE WHEN sqlc.narg('sort') = 'createdAt' AND COALESCE(sqlc.narg('order'), 'asc') = 'asc' THEN content_logs.created_at END,
@@ -40,5 +40,5 @@ OFFSET COALESCE(sqlc.narg('offset')::BIGINT, 0);
 -- name: ContentLogCount :one
 SELECT COALESCE(COUNT(*), 0)::BIGINT AS content_log_count
 FROM content_logs
-WHERE (sqlc.narg(contentId)::BIGINT IS NULL OR content_logs.content_id = sqlc.narg(contentId)::BIGINT);
+WHERE (sqlc.narg(content_id)::BIGINT IS NULL OR content_logs.content_id = sqlc.narg(content_id)::BIGINT);
 

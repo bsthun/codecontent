@@ -1,0 +1,45 @@
+package courseEndpoint
+
+import (
+	"backend/type/common"
+	"backend/type/payload"
+	"backend/type/response"
+
+	"github.com/bsthun/gut"
+	"github.com/gofiber/fiber/v2"
+	"github.com/golang-jwt/jwt/v4"
+)
+
+func (r *Handler) HandleCourseListEnroll(c *fiber.Ctx) error {
+	// * get user claims
+	l := c.Locals("l").(*jwt.Token).Claims.(*common.LoginClaims)
+
+	// * parse body
+	body := new(payload.CourseListByEnrollRequest)
+	if err := c.BodyParser(body); err != nil {
+		return gut.Err(false, "invalid body", err)
+	}
+
+	// * validate body
+	if err := gut.Validate(body); err != nil {
+		return err
+	}
+
+	// * permission act
+	er := r.permissionProcedure.Act(c.Context(), l.UserId, body.UserId)
+	if er != nil {
+		return er
+	}
+
+	// * call procedure
+	items, count, er := r.courseProcedure.CourseListByEnroll(c.Context(), body.UserId, body.Name, body.Limit, body.Offset)
+	if er != nil {
+		return er
+	}
+
+	// * return
+	return c.JSON(response.Success(c, &payload.CourseListByEnrollResponse{
+		Items: items,
+		Count: count,
+	}))
+}

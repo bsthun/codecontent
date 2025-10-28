@@ -28,7 +28,7 @@ SELECT course_photos.id, course_photos.course_id, course_photos.title, course_ph
        (SELECT COALESCE(COUNT(*), 0)::BIGINT FROM content_section_photos WHERE content_section_photos.course_photo_id = course_photos.id) AS content_section_photo_count
 FROM course_photos
 LEFT JOIN courses ON course_photos.course_id = courses.id
-WHERE (sqlc.narg(courseId)::BIGINT IS NULL OR course_photos.course_id = sqlc.narg(courseId)::BIGINT)
+WHERE (sqlc.narg(course_id)::BIGINT IS NULL OR course_photos.course_id = sqlc.narg(course_id)::BIGINT)
   AND (sqlc.narg(title)::TEXT IS NULL OR LOWER(course_photos.title) LIKE LOWER('%' || sqlc.narg(title) || '%'))
 GROUP BY course_photos.id, courses.id
 ORDER BY
@@ -44,6 +44,6 @@ OFFSET COALESCE(sqlc.narg('offset')::BIGINT, 0);
 -- name: CoursePhotoCount :one
 SELECT COALESCE(COUNT(*), 0)::BIGINT AS course_photo_count
 FROM course_photos
-WHERE (sqlc.narg(courseId)::BIGINT IS NULL OR course_photos.course_id = sqlc.narg(courseId)::BIGINT)
+WHERE (sqlc.narg(course_id)::BIGINT IS NULL OR course_photos.course_id = sqlc.narg(course_id)::BIGINT)
   AND (sqlc.narg(title)::TEXT IS NULL OR LOWER(course_photos.title) LIKE LOWER('%' || sqlc.narg(title) || '%'));
 

@@ -5,7 +5,10 @@ import tailwindcss from '@tailwindcss/vite'
 
 // https://vite.dev/config/
 export default defineConfig({
-	plugins: [svelte(), tailwindcss()],
+	plugins: [
+		svelte(),
+		tailwindcss(),
+	],
 	build: {
 		rollupOptions: {
 			output: {
@@ -26,6 +29,7 @@ export default defineConfig({
 	css: {
 		preprocessorOptions: {
 			scss: {
+				// @ts-ignore
 				api: 'modern',
 			},
 		},

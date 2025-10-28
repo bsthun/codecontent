@@ -29,8 +29,8 @@ SELECT sqlc.embed(enrolls),
 FROM enrolls
 LEFT JOIN courses ON enrolls.course_id = courses.id
 LEFT JOIN users ON enrolls.user_id = users.id
-WHERE (sqlc.narg(courseId)::BIGINT IS NULL OR enrolls.course_id = sqlc.narg(courseId)::BIGINT)
-  AND (sqlc.narg(userId)::BIGINT IS NULL OR enrolls.user_id = sqlc.narg(userId)::BIGINT)
+WHERE (sqlc.narg(course_id)::BIGINT IS NULL OR enrolls.course_id = sqlc.narg(course_id)::BIGINT)
+  AND (sqlc.narg(user_id)::BIGINT IS NULL OR enrolls.user_id = sqlc.narg(user_id)::BIGINT)
 GROUP BY enrolls.id, courses.id, users.id
 ORDER BY
   CASE WHEN sqlc.narg('sort') = 'createdAt' AND COALESCE(sqlc.narg('order'), 'asc') = 'asc' THEN enrolls.created_at END,
@@ -43,6 +43,6 @@ OFFSET COALESCE(sqlc.narg('offset')::BIGINT, 0);
 -- name: EnrollCount :one
 SELECT COALESCE(COUNT(*), 0)::BIGINT AS enroll_count
 FROM enrolls
-WHERE (sqlc.narg(courseId)::BIGINT IS NULL OR enrolls.course_id = sqlc.narg(courseId)::BIGINT)
-  AND (sqlc.narg(userId)::BIGINT IS NULL OR enrolls.user_id = sqlc.narg(userId)::BIGINT);
+WHERE (sqlc.narg(course_id)::BIGINT IS NULL OR enrolls.course_id = sqlc.narg(course_id)::BIGINT)
+  AND (sqlc.narg(user_id)::BIGINT IS NULL OR enrolls.user_id = sqlc.narg(user_id)::BIGINT);
 
