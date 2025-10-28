@@ -7,8 +7,10 @@ import (
 	"backend/common/fiber"
 	"backend/common/fiber/middleware"
 	"backend/endpoint"
+	courseEndpoint "backend/endpoint/course"
 	publicEndpoint "backend/endpoint/public"
 	stateEndpoint "backend/endpoint/state"
+	courseProcedure "backend/procedure/course"
 	"backend/type/common"
 	"embed"
 
@@ -35,8 +37,10 @@ func main() {
 			database.Init,
 			fiber.Init,
 			middleware.Init,
+			courseProcedure.Proceed,
 			publicEndpoint.Handle,
 			stateEndpoint.Handle,
+			courseEndpoint.Handle,
 		),
 		fx.Invoke(
 			endpoint.Bind,

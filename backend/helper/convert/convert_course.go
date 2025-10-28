@@ -8,6 +8,8 @@ import (
 // goverter:converter
 // goverter:output:file ../../generate/convert/course.go
 type CourseConverter interface {
-	CoursePayloadsFromCourseRows(source []psql.Course) []*payload.Course
-	CoursePayloadFromCourseRow(source psql.Course) *payload.Course
+	CourseRowToPayload(source psql.Course) *payload.Course
+	CourseRowsToPayload(source []psql.Course) []*payload.Course
+	CourseListByManagerRowToPayload(source psql.CourseListByManagerRow) *payload.CourseExtended
+	CourseListByManagerRowsToPayload(source []psql.CourseListByManagerRow) []*payload.CourseExtended
 }

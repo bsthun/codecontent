@@ -6,7 +6,8 @@
 
 ## General
 
-- Always use pointer as basis
+- Always use pointer as basis, also use `github.com/bsthun/gut` of `gut.Ptr("")`, `gut.Ptr(12.6)`, or specified type
+  `gut.Ptr(uint64(50))` to get pointer of value inline
 - Use `r` as receiver name for all receiver functions, e.g., `func (r *Service) UserCreate(...) ...`
 - Comment format: `// * lowercase compact action`
 - Use camelCase for json tags
@@ -24,13 +25,13 @@
   function `Handle`, the handle function must chop-down arguments one per line.
 - Handler file must have only handler function, one per file, other utils function / type should be declared as
   procedure and payload types.
-- Always register endpoint in `/endpoint/endpoint.go`
+- Always register endpoint in `/endpoint/endpoint.go`, with path of `/api/#entity#/#actionName#` and method `POST`.
 - Endpoint handle only parsing and data flow logic, can directly call database if only for basic CRUD and use procedure
   for complex business logic.
 
 ### Structure
 
-- Every endpoint must starts with this snippet and exact format, change only payload name:
+- Every endpoint must be `POST` and starts with exactly this snippet, change only payload name:
   ```go
   // * get user claims
   l := c.Locals("l").(*jwt.Token).Claims.(*common.LoginClaims)
@@ -52,6 +53,7 @@
 
 ### Payload
 
+- All payload structs are in `/type/payload/#entity#.go`, always place in this package.
 - Always use pointer as basis, see this as example
   ```go
   package example
@@ -91,7 +93,7 @@
   }
   ```
 
-- Return only this format:
+- Return with its own response struct, and response must construct within handler only, e.g.,
   ```go
   return c.JSON(response.Success(c, &payload.ExamQuestionSubmitResponse{
 		Submission: &payload.ExamSubmission{
@@ -134,7 +136,7 @@
 - Count querier use practice of `SELECT COALESCE(COUNT(*), 0)::BIGINT AS #entity#_count FROM ...` to return 0 fallback
 - List querier select * by default, but if field is text, omit the field and select separately to avoid large text load,
   do not use EXCLUDE syntax, if any of child relations is found, add count (using subquery) of child and if any parent
-  relation is found, embed parent, always add this like this:
+  relation is found, embed parent, the filter must cover all parent relations and only name, always add this like this:
   ```sql
     -- name: ClassExamList :many
     SELECT sqlc.embed(exams),
@@ -143,8 +145,8 @@
     (SELECT COALESCE(COUNT(*), 0)::BIGINT FROM contents WHERE contents.exam_questions_id IN (SELECT id FROM exam_questions WHERE exam_questions.exam_id = exams.id)) AS content_count
     FROM exams
     LEFT JOIN classes ON exams.class_id = classes.id
-    WHERE (sqlc.narg(classId)::BIGINT IS NULL OR exams.class_id = sqlc.narg(classId)::BIGINT)
-      AND (sqlc.narg(name)::TEXT IS NULL OR LOWER(exams.name) LIKE LOWER('%' || sqlc.narg(name) || '%'))
+    WHERE (sqlc.narg('class_id')::BIGINT IS NULL OR exams.class_id = sqlc.narg('class_id')::BIGINT)
+      AND (sqlc.narg('name')::TEXT IS NULL OR LOWER(exams.name) LIKE LOWER('%' || sqlc.narg('name') || '%'))
     GROUP BY exams.id, classes.id
     ORDER BY
       CASE WHEN sqlc.narg('sort') = 'name' AND COALESCE(sqlc.narg('order'), 'asc') = 'asc' THEN exams.name END,
@@ -202,13 +204,14 @@
         return gut.Err(false, "failed to commit transaction", err)
     }
   ```
+- Use `sqlc.narg('param_name')` for any optional parameters in querier.
 - If a field is JSONB, it will be declared in `sqlc.yml` to map to `/type/tuple` struct, so always treats them as struct
   and do not handle json marshal / unmarshal manually, for blank value, use `[]byte("{}")` as basis.
 - All timestamp fields are `*time.Time` and the payload must be `*time.Time` as well.
 
 ## Implementation
 
-- Use "github.com/bsthun/gut" for mapping arrays
+- Use `gut.Iterate` for mapping arrays
     ```go
     // * map organizations to items
     organizationItems, _ := gut.Iterate(organizationRows, func(org psql.GetUserOrganizationsRow) (*payload.OrganizationItem, *gut.ErrorInstance) {
@@ -227,12 +230,14 @@
   // goverter:converter
   // goverter:output:file ../../generate/convert/course.go
   type CourseConverter interface {
-  CoursePayloadsFromCourseRows(source []psql.Course) []*payload.Course
-  CoursePayloadFromCourseRow(source psql.Course) *payload.Course
+	CourseRowToPayload(source psql.Course) *payload.Course
+	CourseRowsToPayload(source []psql.Course) []*payload.Course
   }
   ```
   which can use as `import "backend/helper/convert"` and
   `courseItem := convert.Course.CoursePayloadFromCourseRow(course)`
 - Anything returning `*gut.ErrorInstance` must be named `er` instead of `err`. And must be handled with
   `if er != nil { return er }` without wrapping by new `gut.Err(...)`.
-- Always run `make generate` after changing anything, it includes sqlc / goverter / swagger generation and code testing.
+- Always use *uint64 for Id, Count, Limit, Offset everywhere.
+- Always use `make generate` after changing anything / when finished the task, it generates sqlc / goverter / swagger /
+  mockerry, and code testing. Use it as build test and use only this command instead of run individually.

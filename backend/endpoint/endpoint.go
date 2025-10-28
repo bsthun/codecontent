@@ -37,6 +37,7 @@ func Bind(
 	// * course endpoints
 	courses := api.Group("/courses", middleware.Jwt(true))
 	courses.Post("/create", courseEndpoint.HandleCourseCreate)
+	courses.Post("/list/manager", courseEndpoint.HandleCourseListManager)
 
 	// * frontend
 	app.Get("*", func(c *fiber.Ctx) error {

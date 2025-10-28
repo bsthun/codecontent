@@ -10,12 +10,12 @@ import (
 	"github.com/golang-jwt/jwt/v4"
 )
 
-func (r *Handler) HandleCourseCreate(c *fiber.Ctx) error {
+func (r *Handler) HandleCourseListManager(c *fiber.Ctx) error {
 	// * get user claims
 	l := c.Locals("l").(*jwt.Token).Claims.(*common.LoginClaims)
 
 	// * parse body
-	body := new(payload.CourseCreateRequest)
+	body := new(payload.CourseListByManagerRequest)
 	if err := c.BodyParser(body); err != nil {
 		return gut.Err(false, "invalid body", err)
 	}
@@ -25,14 +25,21 @@ func (r *Handler) HandleCourseCreate(c *fiber.Ctx) error {
 		return err
 	}
 
+	// * permission act
+	er := r.permissionProcedure.Act(c.Context(), l.UserId, body.UserId)
+	if er != nil {
+		return er
+	}
+
 	// * call procedure
-	course, er := r.courseProcedure.CourseCreate(c.Context(), body.Name, body.Description, l.UserId)
+	items, count, er := r.courseProcedure.CourseListByManager(c.Context(), body.UserId, body.Name, body.Limit, body.Offset)
 	if er != nil {
 		return er
 	}
 
 	// * return
-	return c.JSON(response.Success(c, &payload.CourseCreateResponse{
-		Course: course,
+	return c.JSON(response.Success(c, &payload.CourseListByManagerResponse{
+		Items: items,
+		Count: count,
 	}))
 }

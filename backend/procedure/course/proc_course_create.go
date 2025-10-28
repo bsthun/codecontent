@@ -9,7 +9,7 @@ import (
 	"github.com/bsthun/gut"
 )
 
-func (r *Procedure) CourseCreate(ctx context.Context, params *payload.CourseCreateParams) (*payload.Course, *gut.ErrorInstance) {
+func (r *Procedure) CourseCreate(ctx context.Context, name *string, description *string, userId *uint64) (*payload.Course, *gut.ErrorInstance) {
 	// * begin transaction
 	tx, querier := r.database.Ptx(ctx, nil)
 	defer func() {
@@ -20,9 +20,9 @@ func (r *Procedure) CourseCreate(ctx context.Context, params *payload.CourseCrea
 
 	// * query course create
 	course, err := querier.CourseCreate(ctx, &psql.CourseCreateParams{
-		Name:              params.Name,
-		Description:       params.Description,
-		PromptInstruction: nil,
+		Name:              name,
+		Description:       description,
+		PromptInstruction: gut.Ptr(""),
 	})
 	if err != nil {
 		_ = tx.Rollback()
@@ -32,7 +32,7 @@ func (r *Procedure) CourseCreate(ctx context.Context, params *payload.CourseCrea
 	// * query course manager create
 	_, err = querier.CourseManagerCreate(ctx, &psql.CourseManagerCreateParams{
 		CourseId: course.Id,
-		UserId:   params.UserId,
+		UserId:   userId,
 	})
 	if err != nil {
 		_ = tx.Rollback()
@@ -45,7 +45,7 @@ func (r *Procedure) CourseCreate(ctx context.Context, params *payload.CourseCrea
 	}
 
 	// * map course to payload course
-	result := convert.Course.CoursePayloadFromCourseRow(course)
+	result := convert.Course.CourseRowToPayload(course)
 
 	// * return
 	return result, nil
