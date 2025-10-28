@@ -2,13 +2,14 @@
 	import { Toaster } from 'svelte-sonner'
 	import { writable } from 'svelte/store'
 	import { onMount, setContext } from 'svelte'
-	import { LoaderCircleIcon } from 'lucide-svelte'
+	import { initDarkMode } from '@bsthun/tailwindcss-instant-dark-mode'
 	import { scrollTop } from '$/util/scroll'
 	import type { Setup } from '$/util/type/setup'
 	import WebviewNotice from '$/component/screen/WebviewNotice.svelte'
-	import { backend, catcher } from '$/util/backend.ts'
+	import { backend } from '$/util/backend.ts'
 
 	scrollTop()
+	initDarkMode()
 
 	let properties = {
 		webview:
