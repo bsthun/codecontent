@@ -4,7 +4,6 @@ go 1.25.0
 
 require (
 	github.com/arsmn/fiber-swagger/v2 v2.31.1
-	github.com/brianium/mnemonic v0.0.0-20180124190051-72af92c51f88
 	github.com/bsthun/gut v1.2.8
 	github.com/coreos/go-oidc/v3 v3.16.0
 	github.com/getsentry/sentry-go v0.36.0
@@ -16,8 +15,9 @@ require (
 	github.com/lithammer/dedent v1.1.0
 	github.com/moby/moby/client v0.1.0-beta.2
 	github.com/pressly/goose/v3 v3.26.0
+	github.com/sqlc-dev/pqtype v0.3.0
+	github.com/stretchr/testify v1.11.1
 	github.com/swaggo/swag v1.16.6
-	github.com/tjarratt/babble v0.0.0-20210505082055-cbca2a4833c1
 	go.scnd.dev/open/model/agentic v0.1.1
 	go.uber.org/fx v1.24.0
 	golang.org/x/oauth2 v0.32.0
@@ -35,6 +35,7 @@ require (
 	github.com/clipperhouse/uax29/v2 v2.3.0 // indirect
 	github.com/containerd/errdefs v1.0.0 // indirect
 	github.com/containerd/errdefs/pkg v0.3.0 // indirect
+	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/distribution/reference v0.6.0 // indirect
 	github.com/docker/go-connections v0.6.0 // indirect
 	github.com/docker/go-units v0.5.0 // indirect
@@ -68,12 +69,12 @@ require (
 	github.com/moby/docker-image-spec v1.3.1 // indirect
 	github.com/moby/moby/api v1.52.0-beta.2 // indirect
 	github.com/moby/term v0.5.2 // indirect
-	github.com/onsi/ginkgo v1.16.5 // indirect
-	github.com/onsi/gomega v1.38.2 // indirect
 	github.com/openai/openai-go v1.12.0 // indirect
 	github.com/opencontainers/go-digest v1.0.0 // indirect
 	github.com/opencontainers/image-spec v1.1.1 // indirect
+	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/sethvargo/go-retry v0.3.0 // indirect
+	github.com/stretchr/objx v0.5.2 // indirect
 	github.com/swaggo/files v1.0.1 // indirect
 	github.com/tidwall/gjson v1.18.0 // indirect
 	github.com/tidwall/match v1.2.0 // indirect
