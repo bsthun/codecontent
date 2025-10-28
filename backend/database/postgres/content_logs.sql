@@ -3,12 +3,12 @@ INSERT INTO content_logs (content_id, prompt, call)
 VALUES ($1, $2, $3)
 RETURNING *;
 
--- name: ContentLogGetById :one
+-- name: ContentLogGet :one
 SELECT *
 FROM content_logs
 WHERE id = $1;
 
--- name: ContentLogUpdateById :one
+-- name: ContentLogUpdate :one
 UPDATE content_logs
 SET
     content_id = COALESCE(sqlc.narg(content_id), content_id),
@@ -17,21 +17,28 @@ SET
 WHERE id = $1
 RETURNING *;
 
--- name: ContentLogDeleteById :exec
+-- name: ContentLogDelete :one
 DELETE FROM content_logs
-WHERE id = $1;
+WHERE id = $1
+RETURNING *;
 
 -- name: ContentLogList :many
-SELECT *
+SELECT content_logs.id, content_logs.content_id, content_logs.created_at, content_logs.updated_at,
+       contents.id, contents.enroll_id, contents.title, contents.created_at, contents.updated_at
 FROM content_logs
-ORDER BY created_at DESC;
+LEFT JOIN contents ON content_logs.content_id = contents.id
+WHERE (sqlc.narg(contentId)::BIGINT IS NULL OR content_logs.content_id = sqlc.narg(contentId)::BIGINT)
+GROUP BY content_logs.id, contents.id
+ORDER BY
+  CASE WHEN sqlc.narg('sort') = 'createdAt' AND COALESCE(sqlc.narg('order'), 'asc') = 'asc' THEN content_logs.created_at END,
+  CASE WHEN sqlc.narg('sort') = 'createdAt' AND sqlc.narg('order') = 'desc' THEN content_logs.created_at END DESC,
+  CASE WHEN sqlc.narg('sort') = 'updatedAt' AND COALESCE(sqlc.narg('order'), 'asc') = 'asc' THEN content_logs.updated_at END,
+  CASE WHEN sqlc.narg('sort') = 'updatedAt' AND sqlc.narg('order') = 'desc' THEN content_logs.updated_at END DESC
+LIMIT sqlc.narg('limit')::BIGINT
+OFFSET COALESCE(sqlc.narg('offset')::BIGINT, 0);
 
 -- name: ContentLogCount :one
 SELECT COALESCE(COUNT(*), 0)::BIGINT AS content_log_count
-FROM content_logs;
-
--- name: ContentLogListByContentId :many
-SELECT *
 FROM content_logs
-WHERE content_id = $1
-ORDER BY created_at DESC;
+WHERE (sqlc.narg(contentId)::BIGINT IS NULL OR content_logs.content_id = sqlc.narg(contentId)::BIGINT);
+

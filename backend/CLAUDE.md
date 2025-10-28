@@ -121,18 +121,18 @@
 
 ### Querier naming convention
 
-- Use entity name as prefix, e.g., `UserCreate`, `UserGetById`, `HostDeleteById`
+- Use entity name as prefix, e.g., `UserCreate`, `UserGet`, `HostDelete`
 - Available verbs: Create, Get, Detail, Count, List, Update, Delete
 - By default, every table must have 4 queriers: `#entity#Create`, `#entity#Get`, `#entity#Update`,
   `#entity#Delete`
 - Create querier must use practice of `INSERT INTO ... VALUES (...) RETURNING *` to return created row, args will have
   all fields included except id, created_at updated_at
-- Get querier tried to select * of the entity by id
+- Get querier tried to select * of the entity
 - Detail querier tried to select *, with all parent relations embedded, and child relations counted.
 - Count querier use practice of `SELECT COALESCE(COUNT(*), 0)::BIGINT AS #entity#_count FROM ...` to return 0 fallback
 - List querier select * by default, but if field is text, omit the field and select separately to avoid large text load,
-  if any of child relations is found, add count (using subquery) of child and if any parent relation is found, embed
-  parent, always add this like this:
+  do not use EXCLUDE syntax, if any of child relations is found, add count (using subquery) of child and if any parent
+  relation is found, embed parent, always add this like this:
   ```sql
     -- name: ClassExamList :many
     SELECT sqlc.embed(exams),
@@ -156,7 +156,9 @@
   ```
 - Update querier use practice of `UPDATE ... SET field = COALESCE(sqlc.narg(field), field) ... RETURNING *` to allow
   partial update and return updated row
-- Use `By` to indicate query by field(s), e.g., `UserGetByEmail`, `HostListByProjectId`
+- Delete querier use practice of `DELETE FROM ... WHERE id = $1 RETURNING *` to return deleted row
+- Use `By` to indicate query by field(s), e.g., `UserGetByEmail`, `HostListByProjectId`, except `GetById`, `UpdateById`,
+  `DeleteById` must simply be `Get`, `Update`, `Delete`
 - Use `And` to indicate multiple fields, e.g., `UserGetByNameAndEmail`, `HostDeleteByIdAndProjectIdAndStatus`
 - It must not have any querier joined with array of child relations, e.g.,
   `SELECT users.*, sqlc.embed(roles) FROM users JOIN roles ...` create separate querier instead, `RoleListByUserId`

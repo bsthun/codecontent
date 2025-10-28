@@ -3,12 +3,12 @@ INSERT INTO enrolls (course_id, user_id)
 VALUES ($1, $2)
 RETURNING *;
 
--- name: EnrollGetById :one
+-- name: EnrollGet :one
 SELECT *
 FROM enrolls
 WHERE id = $1;
 
--- name: EnrollUpdateById :one
+-- name: EnrollUpdate :one
 UPDATE enrolls
 SET
     course_id = COALESCE(sqlc.narg(course_id), course_id),
@@ -16,27 +16,33 @@ SET
 WHERE id = $1
 RETURNING *;
 
--- name: EnrollDeleteById :exec
+-- name: EnrollDelete :one
 DELETE FROM enrolls
-WHERE id = $1;
+WHERE id = $1
+RETURNING *;
 
 -- name: EnrollList :many
-SELECT *
+SELECT sqlc.embed(enrolls),
+       sqlc.embed(courses),
+       sqlc.embed(users),
+       (SELECT COALESCE(COUNT(*), 0)::BIGINT FROM contents WHERE contents.enroll_id = enrolls.id) AS content_count
 FROM enrolls
-ORDER BY created_at DESC;
+LEFT JOIN courses ON enrolls.course_id = courses.id
+LEFT JOIN users ON enrolls.user_id = users.id
+WHERE (sqlc.narg(courseId)::BIGINT IS NULL OR enrolls.course_id = sqlc.narg(courseId)::BIGINT)
+  AND (sqlc.narg(userId)::BIGINT IS NULL OR enrolls.user_id = sqlc.narg(userId)::BIGINT)
+GROUP BY enrolls.id, courses.id, users.id
+ORDER BY
+  CASE WHEN sqlc.narg('sort') = 'createdAt' AND COALESCE(sqlc.narg('order'), 'asc') = 'asc' THEN enrolls.created_at END,
+  CASE WHEN sqlc.narg('sort') = 'createdAt' AND sqlc.narg('order') = 'desc' THEN enrolls.created_at END DESC,
+  CASE WHEN sqlc.narg('sort') = 'updatedAt' AND COALESCE(sqlc.narg('order'), 'asc') = 'asc' THEN enrolls.updated_at END,
+  CASE WHEN sqlc.narg('sort') = 'updatedAt' AND sqlc.narg('order') = 'desc' THEN enrolls.updated_at END DESC
+LIMIT sqlc.narg('limit')::BIGINT
+OFFSET COALESCE(sqlc.narg('offset')::BIGINT, 0);
 
 -- name: EnrollCount :one
 SELECT COALESCE(COUNT(*), 0)::BIGINT AS enroll_count
-FROM enrolls;
-
--- name: EnrollListByCourseId :many
-SELECT *
 FROM enrolls
-WHERE course_id = $1
-ORDER BY created_at DESC;
+WHERE (sqlc.narg(courseId)::BIGINT IS NULL OR enrolls.course_id = sqlc.narg(courseId)::BIGINT)
+  AND (sqlc.narg(userId)::BIGINT IS NULL OR enrolls.user_id = sqlc.narg(userId)::BIGINT);
 
--- name: EnrollListByUserId :many
-SELECT *
-FROM enrolls
-WHERE user_id = $1
-ORDER BY created_at DESC;

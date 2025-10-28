@@ -3,12 +3,12 @@ INSERT INTO course_managers (course_id, user_id)
 VALUES ($1, $2)
 RETURNING *;
 
--- name: CourseManagerGetById :one
+-- name: CourseManagerGet :one
 SELECT *
 FROM course_managers
 WHERE id = $1;
 
--- name: CourseManagerUpdateById :one
+-- name: CourseManagerUpdate :one
 UPDATE course_managers
 SET
     course_id = COALESCE(sqlc.narg(course_id), course_id),
@@ -16,27 +16,31 @@ SET
 WHERE id = $1
 RETURNING *;
 
--- name: CourseManagerDeleteById :exec
+-- name: CourseManagerDelete :one
 DELETE FROM course_managers
-WHERE id = $1;
+WHERE id = $1
+RETURNING *;
 
 -- name: CourseManagerList :many
-SELECT *
+SELECT sqlc.embed(course_managers),
+       sqlc.embed(courses),
+       sqlc.embed(users)
 FROM course_managers
-ORDER BY created_at DESC;
+LEFT JOIN courses ON course_managers.course_id = courses.id
+LEFT JOIN users ON course_managers.user_id = users.id
+WHERE (sqlc.narg(courseId)::BIGINT IS NULL OR course_managers.course_id = sqlc.narg(courseId)::BIGINT)
+  AND (sqlc.narg(userId)::BIGINT IS NULL OR course_managers.user_id = sqlc.narg(userId)::BIGINT)
+GROUP BY course_managers.id, courses.id, users.id
+ORDER BY
+  CASE WHEN sqlc.narg('sort') = 'createdAt' AND COALESCE(sqlc.narg('order'), 'asc') = 'asc' THEN course_managers.created_at END,
+  CASE WHEN sqlc.narg('sort') = 'createdAt' AND sqlc.narg('order') = 'desc' THEN course_managers.created_at END DESC,
+  CASE WHEN sqlc.narg('sort') = 'updatedAt' AND COALESCE(sqlc.narg('order'), 'asc') = 'asc' THEN course_managers.updated_at END,
+  CASE WHEN sqlc.narg('sort') = 'updatedAt' AND sqlc.narg('order') = 'desc' THEN course_managers.updated_at END DESC
+LIMIT sqlc.narg('limit')::BIGINT
+OFFSET COALESCE(sqlc.narg('offset')::BIGINT, 0);
 
 -- name: CourseManagerCount :one
 SELECT COALESCE(COUNT(*), 0)::BIGINT AS course_manager_count
-FROM course_managers;
-
--- name: CourseManagerListByCourseId :many
-SELECT *
 FROM course_managers
-WHERE course_id = $1
-ORDER BY created_at DESC;
-
--- name: CourseManagerListByUserId :many
-SELECT *
-FROM course_managers
-WHERE user_id = $1
-ORDER BY created_at DESC;
+WHERE (sqlc.narg(courseId)::BIGINT IS NULL OR course_managers.course_id = sqlc.narg(courseId)::BIGINT)
+  AND (sqlc.narg(userId)::BIGINT IS NULL OR course_managers.user_id = sqlc.narg(userId)::BIGINT);
