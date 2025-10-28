@@ -42,7 +42,7 @@ swagger:
 	sed -i '' -e 's/response.GenericResponse/Res/g' -e 's/payload_//g' ./generate/swagger/*.{json,yaml}
 	swagger2openapi --yaml --outfile ./generate/swagger/openapi.yaml ./generate/swagger/swagger.yaml
 	go run ./command/swaggermd
-	#(cd ../frontend && bun run generate)
+	(cd ../frontend && bun run generate)
 
 .PHONY: mock
 mock:
