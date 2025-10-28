@@ -123,8 +123,8 @@
 
 - Use entity name as prefix, e.g., `UserCreate`, `UserGetById`, `HostDeleteById`
 - Available verbs: Create, Get, Detail, Count, List, Update, Delete
-- By default, every table must have 4 queriers: `#entity#Create`, `#entity#GetById`, `#entity#UpdateById`,
-  `#entity#DeleteById`
+- By default, every table must have 4 queriers: `#entity#Create`, `#entity#Get`, `#entity#Update`,
+  `#entity#Delete`
 - Create querier must use practice of `INSERT INTO ... VALUES (...) RETURNING *` to return created row, args will have
   all fields included except id, created_at updated_at
 - Get querier tried to select * of the entity by id
@@ -132,31 +132,27 @@
 - Count querier use practice of `SELECT COALESCE(COUNT(*), 0)::BIGINT AS #entity#_count FROM ...` to return 0 fallback
 - List querier select * by default, but if field is text, omit the field and select separately to avoid large text load,
   if any of child relations is found, add count (using subquery) of child and if any parent relation is found, embed
-  parent, e.g.,
+  parent, always add this like this:
   ```sql
-    -- name: ClassExamListByClass :many
+    -- name: ClassExamList :many
     SELECT sqlc.embed(exams),
     sqlc.embed(classes),
-    (SELECT COALESCE(COUNT(*), 0)::BIGINT FROM exam_questions WHERE exam_questions.exam_id = exams.id) AS exam_question_count
+    (SELECT COALESCE(COUNT(*), 0)::BIGINT FROM exam_questions WHERE exam_questions.exam_id = exams.id) AS exam_question_count,
+    (SELECT COALESCE(COUNT(*), 0)::BIGINT FROM contents WHERE contents.exam_questions_id IN (SELECT id FROM exam_questions WHERE exam_questions.exam_id = exams.id)) AS content_count
     FROM exams
     LEFT JOIN classes ON exams.class_id = classes.id
-    WHERE exams.class_id = $1
+    WHERE (sqlc.narg(classId)::BIGINT IS NULL OR exams.class_id = sqlc.narg(classId)::BIGINT)
+      AND (sqlc.narg(name)::TEXT IS NULL OR LOWER(exams.name) LIKE LOWER('%' || sqlc.narg(name) || '%'))
     GROUP BY exams.id, classes.id
-    ORDER BY exams.created_at DESC;
-  ```
-- List querier (continue), if any entity should paginate and search, use this pattern:
-  ```sql
-    -- name: CollectionList :many
-    SELECT collections.*,
-    (SELECT COALESCE(COUNT(*), 0)::BIGINT FROM collection_questions WHERE collection_questions.collection_id = collections.id) AS collection_question_count
-    FROM collections
-    LEFT JOIN collection_questions ON collections.id = collection_questions.collection_id
-    WHERE (sqlc.narg('name')::text IS NULL OR LOWER(collections.name) LIKE LOWER('%' || sqlc.narg('name') || '%'))
-    GROUP BY collections.id
     ORDER BY
-      CASE WHEN sqlc.narg('sort') = 'name' THEN collections.name END ASC,
-      CASE WHEN sqlc.narg('sort') = 'createdAt' THEN collections.created_at END DESC
-    LIMIT $1 OFFSET $2;
+      CASE WHEN sqlc.narg('sort') = 'name' AND COALESCE(sqlc.narg('order'), 'asc') = 'asc' THEN exams.name END,
+      CASE WHEN sqlc.narg('sort') = 'name' AND sqlc.narg('order') = 'desc' THEN exams.name END DESC,
+      CASE WHEN sqlc.narg('sort') = 'createdAt' AND COALESCE(sqlc.narg('order'), 'asc') = 'asc' THEN exams.created_at END,
+      CASE WHEN sqlc.narg('sort') = 'createdAt' AND sqlc.narg('order') = 'desc' THEN exams.created_at END DESC,
+      CASE WHEN sqlc.narg('sort') = 'updatedAt' AND COALESCE(sqlc.narg('order'), 'asc') = 'asc' THEN exams.created_at END,
+      CASE WHEN sqlc.narg('sort') = 'updatedAt' AND sqlc.narg('order') = 'desc' THEN exams.created_at END DESC
+    LIMIT sqlc.narg('limit')::BIGINT
+    OFFSET COALESCE(sqlc.narg('offset')::BIGINT, 0);
   ```
 - Update querier use practice of `UPDATE ... SET field = COALESCE(sqlc.narg(field), field) ... RETURNING *` to allow
   partial update and return updated row

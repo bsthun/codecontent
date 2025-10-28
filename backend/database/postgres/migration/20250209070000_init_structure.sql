@@ -28,12 +28,12 @@ CREATE TABLE topics
 
 CREATE TABLE courses
 (
-    id                BIGSERIAL PRIMARY KEY,
-    name              VARCHAR(255) NOT NULL,
-    description       TEXT         NULL,
-    prompt_instruction TEXT         NULL,
-    created_at        TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at        TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP
+    id                 BIGSERIAL PRIMARY KEY,
+    name               VARCHAR(255) NOT NULL,
+    description        VARCHAR(255) NOT NULL ,
+    prompt_instruction VARCHAR(255) NOT NULL,
+    created_at         TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at         TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE course_managers
@@ -60,21 +60,21 @@ CREATE TABLE contents
 (
     id         BIGSERIAL PRIMARY KEY,
     enroll_id  BIGINT REFERENCES enrolls (id) ON DELETE CASCADE NOT NULL,
-    title      VARCHAR(255)                                          NOT NULL,
-    created_at TIMESTAMP                                             NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP                                             NOT NULL DEFAULT CURRENT_TIMESTAMP
+    title      VARCHAR(255)                                     NOT NULL,
+    created_at TIMESTAMP                                        NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP                                        NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE content_sections
 (
-    id          BIGSERIAL PRIMARY KEY,
-    content_id  BIGINT REFERENCES contents (id) ON DELETE CASCADE NOT NULL,
-    section_no  INTEGER                                              NOT NULL,
-    title       VARCHAR(255)                                         NOT NULL,
-    subtitle    VARCHAR(255)                                         NULL,
-    content     TEXT                                                 NULL,
-    created_at  TIMESTAMP                                            NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at  TIMESTAMP                                            NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    id         BIGSERIAL PRIMARY KEY,
+    content_id BIGINT REFERENCES contents (id) ON DELETE CASCADE NOT NULL,
+    section_no INTEGER                                           NOT NULL,
+    title      VARCHAR(255)                                      NOT NULL,
+    subtitle   VARCHAR(255)                                      NULL,
+    content    TEXT                                              NULL,
+    created_at TIMESTAMP                                         NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP                                         NOT NULL DEFAULT CURRENT_TIMESTAMP,
     UNIQUE (content_id, section_no)
 );
 
@@ -82,29 +82,29 @@ CREATE TABLE content_logs
 (
     id         BIGSERIAL PRIMARY KEY,
     content_id BIGINT REFERENCES contents (id) ON DELETE CASCADE NOT NULL,
-    prompt     TEXT                                                 NOT NULL,
-    call       JSONB                                                NOT NULL,
-    created_at TIMESTAMP                                            NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP                                            NOT NULL DEFAULT CURRENT_TIMESTAMP
+    prompt     TEXT                                              NOT NULL,
+    call       JSONB                                             NOT NULL,
+    created_at TIMESTAMP                                         NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP                                         NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE course_photos
 (
     id          BIGSERIAL PRIMARY KEY,
     course_id   BIGINT REFERENCES courses (id) ON DELETE CASCADE NOT NULL,
-    title       VARCHAR(255)                                         NOT NULL,
-    description TEXT                                                 NULL,
-    created_at  TIMESTAMP                                            NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at  TIMESTAMP                                            NOT NULL DEFAULT CURRENT_TIMESTAMP
+    title       VARCHAR(255)                                     NOT NULL,
+    description TEXT                                             NULL,
+    created_at  TIMESTAMP                                        NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at  TIMESTAMP                                        NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE content_section_photos
 (
-    id                  BIGSERIAL PRIMARY KEY,
-    content_section_id  BIGINT REFERENCES content_sections (id) ON DELETE CASCADE NOT NULL,
-    course_photo_id     BIGINT REFERENCES course_photos (id) ON DELETE CASCADE     NOT NULL,
-    created_at          TIMESTAMP                                                NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at          TIMESTAMP                                                NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    id                 BIGSERIAL PRIMARY KEY,
+    content_section_id BIGINT REFERENCES content_sections (id) ON DELETE CASCADE NOT NULL,
+    course_photo_id    BIGINT REFERENCES course_photos (id) ON DELETE CASCADE    NOT NULL,
+    created_at         TIMESTAMP                                                 NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at         TIMESTAMP                                                 NOT NULL DEFAULT CURRENT_TIMESTAMP,
     UNIQUE (content_section_id, course_photo_id)
 );
 
