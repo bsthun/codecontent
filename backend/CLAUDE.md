@@ -125,8 +125,8 @@
 - Available verbs: Create, Get, Detail, Count, List, Update, Delete
 - By default, every table must have 4 queriers: `#entity#Create`, `#entity#GetById`, `#entity#UpdateById`,
   `#entity#DeleteById`
-- Create querier must use practice of `INSERT INTO ... VALUES (...) RETURNING *` to return created row, with all fields
-  included without created_at / updated_at
+- Create querier must use practice of `INSERT INTO ... VALUES (...) RETURNING *` to return created row, args will have
+  all fields included except id, created_at updated_at
 - Get querier tried to select * of the entity by id
 - Detail querier tried to select *, with all parent relations embedded, and child relations counted.
 - Count querier use practice of `SELECT COALESCE(COUNT(*), 0)::BIGINT AS #entity#_count FROM ...` to return 0 fallback
