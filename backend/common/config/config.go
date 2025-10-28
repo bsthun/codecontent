@@ -9,15 +9,18 @@ import (
 )
 
 type Config struct {
-	Environment   *enum.Environment `yaml:"environment" validate:"required"`
-	WebListen     [2]*string        `yaml:"webListen" validate:"required"`
-	FrontendUrl   *string           `yaml:"frontendUrl" validate:"required"`
-	Secret        *string           `yaml:"secret" validate:"required"`
-	PostgresDsn   *string           `yaml:"postgresDsn" validate:"required"`
-	OpenaiBaseUrl *string           `yaml:"openaiBaseUrl" validate:"required"`
-	OpenaiModel   *string           `yaml:"openaiModel" validate:"required"`
-	OpenaiApiKey  *string           `yaml:"openaiApiKey" validate:"required"`
-	DockerUri     *string           `yaml:"dockerUri" validate:"required"`
+	Environment       *enum.Environment `yaml:"environment" validate:"required"`
+	WebListen         [2]*string        `yaml:"webListen" validate:"required"`
+	FrontendUrl       *string           `yaml:"frontendUrl" validate:"required"`
+	Secret            *string           `yaml:"secret" validate:"required"`
+	PostgresDsn       *string           `yaml:"postgresDsn" validate:"required"`
+	OauthClientId     *string           `yaml:"oauthClientId" validate:"required"`
+	OauthClientSecret *string           `yaml:"oauthClientSecret" validate:"required"`
+	OauthEndpoint     *string           `yaml:"oauthEndpoint" validate:"required"`
+	OpenaiBaseUrl     *string           `yaml:"openaiBaseUrl" validate:"required"`
+	OpenaiModel       *string           `yaml:"openaiModel" validate:"required"`
+	OpenaiApiKey      *string           `yaml:"openaiApiKey" validate:"required"`
+	DockerUri         *string           `yaml:"dockerUri" validate:"required"`
 }
 
 func Init() *Config {

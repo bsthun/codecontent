@@ -1,0 +1,21 @@
+services:
+  postgres:
+    image: postgres:17
+    container_name: codecontent-postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - codecontent-postgres-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: codecontent1
+      POSTGRES_DB: codecontent1
+    cpus: 2.0
+    mem_limit: 2G
+    memswap_limit: 2G
+    restart: no
+    logging:
+      driver: none
+
+volumes:
+  codecontent-postgres-data:
