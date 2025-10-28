@@ -3,6 +3,7 @@ package endpoint
 import (
 	"backend/common/config"
 	"backend/common/fiber/middleware"
+	"backend/endpoint/course"
 	"backend/endpoint/public"
 	"backend/endpoint/state"
 	"backend/type/common"
@@ -18,6 +19,7 @@ func Bind(
 	frontend common.FrontendFS,
 	publicEndpoint *publicEndpoint.Handler,
 	stateEndpoint *stateEndpoint.Handler,
+	courseEndpoint *courseEndpoint.Handler,
 	middleware *middleware.Middleware,
 ) {
 	api := app.Group("/api")
@@ -31,6 +33,10 @@ func Bind(
 	// * state endpoints
 	state := api.Group("/state", middleware.Jwt(true))
 	state.Post("/state", stateEndpoint.HandleState)
+
+	// * course endpoints
+	courses := api.Group("/courses", middleware.Jwt(true))
+	courses.Post("/create", courseEndpoint.HandleCourseCreate)
 
 	// * frontend
 	app.Get("*", func(c *fiber.Ctx) error {

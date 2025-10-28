@@ -111,6 +111,8 @@
   line.
 - Procedure file must have only procedure function, one per file without other utils function / type, those should be
   declared as separate procedure and payload types.
+- The argument preferred variable by variable instead of struct, but if there are more than 4 variables, use struct
+  with name `#entityName##action#Param`, e.g., `UserCreateParam`, `ExamSubmissionCompareParam`.
 
 ## Database
 
@@ -202,6 +204,7 @@
   ```
 - If a field is JSONB, it will be declared in `sqlc.yml` to map to `/type/tuple` struct, so always treats them as struct
   and do not handle json marshal / unmarshal manually, for blank value, use `[]byte("{}")` as basis.
+- All timestamp fields are `*time.Time` and the payload must be `*time.Time` as well.
 
 ## Implementation
 
@@ -217,6 +220,19 @@
         Items: organizationItems
     }))
     ```
+- Use converter defined in `/helper/convert/convert_#entity#.go` for struct mapping between sqlc and payload struct,
+  example as:
+  ```go
+  package convert
+  // goverter:converter
+  // goverter:output:file ../../generate/convert/course.go
+  type CourseConverter interface {
+  CoursePayloadsFromCourseRows(source []psql.Course) []*payload.Course
+  CoursePayloadFromCourseRow(source psql.Course) *payload.Course
+  }
+  ```
+  which can use as `import "backend/helper/convert"` and
+  `courseItem := convert.Course.CoursePayloadFromCourseRow(course)`
 - Anything returning `*gut.ErrorInstance` must be named `er` instead of `err`. And must be handled with
   `if er != nil { return er }` without wrapping by new `gut.Err(...)`.
-- Always run `make generate` after changing anything, it includes sqlc generation, code testing, and swagger generation.
+- Always run `make generate` after changing anything, it includes sqlc / goverter / swagger generation and code testing.
