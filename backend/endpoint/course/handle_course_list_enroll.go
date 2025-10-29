@@ -32,7 +32,7 @@ func (r *Handler) HandleCourseListEnroll(c *fiber.Ctx) error {
 	}
 
 	// * call procedure
-	items, count, er := r.courseProcedure.CourseListByEnroll(c.Context(), body.UserId, body.Name, body.Limit, body.Offset)
+	items, count, er := r.courseProcedure.CourseListEnroll(c.Context(), body.UserId, body.Name, body.Limit, body.Offset)
 	if er != nil {
 		return er
 	}

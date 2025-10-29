@@ -12,4 +12,8 @@ type CourseConverter interface {
 	CourseRowsToPayload(source []psql.Course) []*payload.Course
 	CourseListByManagerRowToPayload(source psql.CourseListByManagerRow) *payload.CourseExtended
 	CourseListByManagerRowsToPayload(source []psql.CourseListByManagerRow) []*payload.CourseExtended
+	CourseListExploreRowToPayload(source psql.CourseListExploreRow) *payload.CourseExtended
+	CourseListExploreRowsToPayload(source []psql.CourseListExploreRow) []*payload.CourseExtended
+	CourseListByEnrollRowToPayload(source psql.CourseListByEnrollRow) *payload.CourseExtended
+	CourseListByEnrollRowsToPayload(source []psql.CourseListByEnrollRow) []*payload.CourseExtended
 }

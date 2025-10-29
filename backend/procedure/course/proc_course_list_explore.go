@@ -30,19 +30,8 @@ func (r *Procedure) CourseListExplore(ctx context.Context, userId *uint64, name 
 		return nil, nil, gut.Err(false, "failed to count explore courses", err)
 	}
 
-	// * map course rows to extended courses
-	items, er := gut.Iterate(courseRows, func(course psql.CourseListExploreRow) (*payload.CourseExtended, *gut.ErrorInstance) {
-		coursePayload := convert.Course.CourseRowToPayload(course.Course)
-		return &payload.CourseExtended{
-			Course:             *coursePayload,
-			CourseManagerCount: course.CourseManagerCount,
-			EnrollCount:        course.EnrollCount,
-			CoursePhotoCount:   course.CoursePhotoCount,
-		}, nil
-	})
-	if er != nil {
-		return nil, nil, er
-	}
+	// * map course rows to payload courses
+	items := convert.Course.CourseListExploreRowsToPayload(courseRows)
 
 	// * return
 	return items, count, nil

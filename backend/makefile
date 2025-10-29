@@ -33,7 +33,7 @@ sqlc:
 .PHONY: vert
 vert:
 	find ./generate/convert -type f -exec sed -i '' '/^\/\/go:build !goverter/d' {} +
-	goverter gen -g 'skipCopySameType yes' ./...
+	goverter gen -g 'skipCopySameType yes' ./helper/convert
 
 .PHONY: swagger
 swagger:

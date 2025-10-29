@@ -9,7 +9,7 @@ import (
 	"github.com/bsthun/gut"
 )
 
-func (r *Procedure) CourseListByManager(ctx context.Context, userId *uint64, name *string, limit *uint64, offset *uint64) ([]*payload.CourseExtended, *uint64, *gut.ErrorInstance) {
+func (r *Procedure) CourseListManager(ctx context.Context, userId *uint64, name *string, limit *uint64, offset *uint64) ([]*payload.CourseExtended, *uint64, *gut.ErrorInstance) {
 	// * query course list by manager
 	courseRows, err := r.database.P().CourseListByManager(ctx, &psql.CourseListByManagerParams{
 		Userid: userId,

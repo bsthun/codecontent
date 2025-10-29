@@ -60,7 +60,7 @@
 	{:else}
 		<div
 			bind:this={scrollContainer}
-			class="scrollbar-hide flex snap-x snap-mandatory gap-6 overflow-x-auto pb-4"
+			class="scrollbar-hide flex snap-x snap-mandatory gap-6 overflow-x-auto pb-4 px-2"
 			style="scroll-behavior: smooth;"
 		>
 			{#each courses as course (course.id)}

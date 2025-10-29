@@ -18,6 +18,7 @@ type Course struct {
 	Name              *string    `json:"name"`
 	Description       *string    `json:"description"`
 	PromptInstruction *string    `json:"promptInstruction"`
+	Token             *string    `json:"token"`
 	CreatedAt         *time.Time `json:"createdAt"`
 	UpdatedAt         *time.Time `json:"updatedAt"`
 }
@@ -83,4 +84,38 @@ type CourseIdRequest struct {
 
 type CourseWrapper struct {
 	Course *Course `json:"course"`
+}
+
+type CourseManageDetailRequest struct {
+	CourseId *uint64 `json:"courseId" validate:"required"`
+}
+
+type EnrollInfo struct {
+	Id             *uint64    `json:"id"`
+	CourseId       *uint64    `json:"courseId"`
+	UserId         *uint64    `json:"userId"`
+	UserOid        *string    `json:"userOid"`
+	UserFirstname  *string    `json:"userFirstname"`
+	UserLastname   *string    `json:"userLastname"`
+	UserEmail      *string    `json:"userEmail"`
+	UserPictureUrl *string    `json:"userPictureUrl"`
+	ContentCount   *uint64    `json:"contentCount"`
+	CreatedAt      *time.Time `json:"createdAt"`
+	UpdatedAt      *time.Time `json:"updatedAt"`
+}
+
+type ContentInfo struct {
+	Id                  *uint64    `json:"id"`
+	EnrollId            *uint64    `json:"enrollId"`
+	Title               *string    `json:"title"`
+	ContentSectionCount *uint64    `json:"contentSectionCount"`
+	ContentLogCount     *uint64    `json:"contentLogCount"`
+	CreatedAt           *time.Time `json:"createdAt"`
+	UpdatedAt           *time.Time `json:"updatedAt"`
+}
+
+type CourseManageDetailResponse struct {
+	Course      *Course        `json:"course"`
+	EnrollList  []*EnrollInfo  `json:"enrollList"`
+	ContentList []*ContentInfo `json:"contentList"`
 }

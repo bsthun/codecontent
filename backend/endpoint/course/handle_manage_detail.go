@@ -10,12 +10,12 @@ import (
 	"github.com/golang-jwt/jwt/v4"
 )
 
-func (r *Handler) HandleCourseListManager(c *fiber.Ctx) error {
+func (r *Handler) HandleManageDetail(c *fiber.Ctx) error {
 	// * get user claims
 	l := c.Locals("l").(*jwt.Token).Claims.(*common.LoginClaims)
 
 	// * parse body
-	body := new(payload.CourseListByManagerRequest)
+	body := new(payload.CourseManageDetailRequest)
 	if err := c.BodyParser(body); err != nil {
 		return gut.Err(false, "invalid body", err)
 	}
@@ -26,20 +26,21 @@ func (r *Handler) HandleCourseListManager(c *fiber.Ctx) error {
 	}
 
 	// * permission act
-	er := r.permissionProcedure.Act(c.Context(), l.UserId, body.UserId)
+	er := r.permissionProcedure.CourseManage(c.Context(), l.UserId, body.CourseId, gut.Ptr("manage"))
 	if er != nil {
 		return er
 	}
 
 	// * call procedure
-	items, count, er := r.courseProcedure.CourseListManager(c.Context(), body.UserId, body.Name, body.Limit, body.Offset)
+	course, enrollList, contentList, er := r.courseProcedure.CourseManageDetail(c.Context(), body.CourseId)
 	if er != nil {
 		return er
 	}
 
 	// * return
-	return c.JSON(response.Success(c, &payload.CourseListByManagerResponse{
-		Items: items,
-		Count: count,
+	return c.JSON(response.Success(c, &payload.CourseManageDetailResponse{
+		Course:      course,
+		EnrollList:  enrollList,
+		ContentList: contentList,
 	}))
 }

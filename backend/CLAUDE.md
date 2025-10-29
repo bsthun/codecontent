@@ -171,10 +171,11 @@
 - Use `And` to indicate multiple fields, e.g., `UserGetByNameAndEmail`, `HostDeleteByIdAndProjectIdAndStatus`
 - It must not have any querier joined with array of child relations, e.g.,
   `SELECT users.*, sqlc.embed(roles) FROM users JOIN roles ...` create separate querier instead, `RoleListByUserId`
-- Example go code to call querier:
+- Example go code to call querier, for Limit and Offset can use nil if not paginated:
   ```go
     // * query: user create
-    createdUser, err := r.database.P().UserCreate(c.Context(), psql.CreateUserParams{
+    import "backend/generate/psql"
+    createdUser, err := r.database.P().UserCreate(c.Context(), &psql.CreateUserParams{
         Name:  body.Name,
         Email: body.Email,
     })
