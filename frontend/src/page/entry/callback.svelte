@@ -6,6 +6,8 @@
 	import { toast } from 'svelte-sonner'
 	import { backend } from '$/util/backend.ts'
 	import Container from '$/component/layout/Container.svelte'
+	import Loading from '$/component/interact/Loading.svelte'
+	import { Card, CardContent, CardHeader, CardTitle } from '$/lib/shadcn/components/card'
 
 	const location = useLocation()
 	const params = new URLSearchParams($location.search)
@@ -51,17 +53,15 @@
 </script>
 
 <Container class="flex min-h-dvh items-center justify-center">
-	<div class="card mx-4 w-full max-w-md bg-base-100 shadow-xl">
-		<div class="card-body text-center">
-			<h2 class="card-title text-base-content justify-center">
-				Processing Login
-			</h2>
-			<p class="text-base-content/70 mb-6">
-				Please wait while we verify your credentials
-			</p>
+	<Card class="mx-4 w-full max-w-md">
+		<CardHeader class="text-center">
+			<CardTitle class="justify-center">Processing Login</CardTitle>
+		</CardHeader>
+		<CardContent class="space-y-6 text-center">
+			<p class="text-muted-foreground">Please wait while we verify your credentials</p>
 			<div class="mb-4 flex justify-center">
-				<div class="loading loading-spinner loading-lg text-base-content"></div>
+				<Loading size="lg" />
 			</div>
-		</div>
-	</div>
+		</CardContent>
+	</Card>
 </Container>

@@ -1,87 +1,104 @@
 <script lang="ts">
 	import type { PayloadCourseExtended } from '$/util/backend/backend'
 	import { BookOpenIcon, UsersIcon, ImageIcon } from 'lucide-svelte'
+	import { Card, CardContent, CardTitle } from '$/lib/shadcn/components/card'
+	import { Button } from '$/lib/shadcn/components/button'
 
 	export let course: PayloadCourseExtended
 	export let variant: 'enrolled' | 'managed' | 'explore' = 'explore'
 
-	const getVariantClasses = () => {
-		switch (variant) {
-			case 'enrolled':
-				return 'card-bordered hover:shadow-2xl'
-			case 'managed':
-				return 'card-bordered hover:shadow-2xl'
-			case 'explore':
-				return 'card-bordered hover:shadow-2xl'
-			default:
-				return 'card-bordered'
-		}
-	}
-
 	const handleClick = () => {
 		console.log('Course clicked:', course.id)
 	}
+
+	const getBadgeClasses = () => {
+		switch (variant) {
+			case 'managed':
+				return 'bg-primary text-primary-foreground'
+			case 'enrolled':
+				return 'bg-secondary text-secondary-foreground'
+			default:
+				return 'bg-muted text-muted-foreground'
+		}
+	}
+
+	const getButtonVariant = () => {
+		switch (variant) {
+			case 'explore':
+				return 'default'
+			case 'enrolled':
+				return 'secondary'
+			case 'managed':
+				return 'outline'
+			default:
+				return 'default'
+		}
+	}
 </script>
 
-<div
-	class="card bg-base-100 shadow-lg transition-all duration-300 hover:scale-105 cursor-pointer {getVariantClasses()}"
-	on:click={handleClick}
-	on:keypress={(e) => e.key === 'Enter' && handleClick()}
+<Card
+	class="cursor-pointer shadow-lg"
+	onclick={handleClick}
+	onkeypress={(e) => e.key === 'Enter' && handleClick()}
 	role="button"
-	tabindex="0"
+	tabindex={0}
 >
-	<figure class="relative h-48 bg-gradient-to-br from-primary/20 to-secondary/20">
+	<div class="from-primary/20 to-secondary/20 relative h-48 rounded-t-lg bg-gradient-to-br">
 		{#if course.coursePhotoCount > 0}
 			<div class="absolute inset-0 flex items-center justify-center">
-				<ImageIcon class="w-16 h-16 text-base-content/30" />
+				<ImageIcon class="text-muted-foreground/30 h-16 w-16" />
 			</div>
 		{:else}
 			<div class="absolute inset-0 flex items-center justify-center">
-				<BookOpenIcon class="w-16 h-16 text-base-content/30" />
+				<BookOpenIcon class="text-muted-foreground/30 h-16 w-16" />
 			</div>
 		{/if}
 		{#if variant === 'managed'}
-			<div class="badge badge-primary absolute top-4 right-4">Manager</div>
+			<span class="absolute top-[50%] right-4 rounded-full px-2 py-1 text-xs font-medium {getBadgeClasses()}">
+				Manager
+			</span>
 		{:else if variant === 'enrolled'}
-			<div class="badge badge-success absolute top-4 right-4">Enrolled</div>
+			<span class="absolute top-4 right-4 rounded-full px-2 py-1 text-xs font-medium {getBadgeClasses()}">
+				Enrolled
+			</span>
 		{/if}
-	</figure>
+	</div>
 
-	<div class="card-body p-4">
-		<h2 class="card-title text-lg font-bold line-clamp-2">
+	<CardContent class="p-4">
+		<CardTitle class="mb-2 line-clamp-2 text-lg font-bold">
 			{course.name}
-		</h2>
-		<p class="text-sm text-base-content/70 line-clamp-3 flex-grow">
+		</CardTitle>
+		<p class="text-muted-foreground mb-4 line-clamp-3 flex-grow text-sm">
 			{course.description || 'No description available'}
 		</p>
 
-		<div class="flex items-center gap-4 mt-2 text-sm text-base-content/60">
+		<div class="text-muted-foreground mb-4 flex items-center gap-4 text-sm">
 			<div class="flex items-center gap-1" title="Enrolled students">
-				<UsersIcon class="w-4 h-4" />
+				<UsersIcon class="h-4 w-4" />
 				<span>{course.enrollCount}</span>
 			</div>
 			{#if course.courseManagerCount > 0}
 				<div class="flex items-center gap-1" title="Course managers">
-					<UsersIcon class="w-4 h-4" />
+					<UsersIcon class="h-4 w-4" />
 					<span>{course.courseManagerCount} managers</span>
 				</div>
 			{/if}
 			{#if course.coursePhotoCount > 0}
 				<div class="flex items-center gap-1" title="Course photos">
-					<ImageIcon class="w-4 h-4" />
+					<ImageIcon class="h-4 w-4" />
 					<span>{course.coursePhotoCount}</span>
 				</div>
 			{/if}
 		</div>
 
-		<div class="card-actions justify-end mt-4">
+		<div class="flex justify-end">
 			{#if variant === 'explore'}
-				<button class="btn btn-primary btn-sm">Enroll Now</button>
+				<Button variant={getButtonVariant()} size="sm">Enroll Now</Button>
 			{:else if variant === 'enrolled'}
-				<button class="btn btn-secondary btn-sm">Continue Learning</button>
+				<Button variant={getButtonVariant()} size="sm">Continue Learning</Button>
 			{:else if variant === 'managed'}
-				<button class="btn btn-accent btn-sm">Manage Course</button>
+				<Button variant={getButtonVariant()} size="sm">Manage Course</Button>
 			{/if}
 		</div>
-	</div>
-</div>
+	</CardContent>
+</Card>

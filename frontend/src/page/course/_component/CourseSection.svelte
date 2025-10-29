@@ -2,6 +2,8 @@
 	import type { PayloadCourseExtended } from '$/util/backend/backend'
 	import CourseCard from './CourseCard.svelte'
 	import { ChevronLeftIcon, ChevronRightIcon } from 'lucide-svelte'
+	import { Button } from '$/lib/shadcn/components/button'
+	import { Card, CardContent } from '$/lib/shadcn/components/card'
 
 	export let title: string
 	export let courses: PayloadCourseExtended[]
@@ -22,24 +24,28 @@
 </script>
 
 <div class="mb-12">
-	<div class="flex items-center justify-between mb-4">
-		<h2 class="text-2xl font-bold text-base-content">{title}</h2>
+	<div class="mb-4 flex items-center justify-between">
+		<h2 class="text-foreground text-2xl font-bold">{title}</h2>
 		{#if courses.length > 0}
 			<div class="flex gap-2">
-				<button
-					class="btn btn-circle btn-sm btn-ghost"
-					on:click={() => scroll('left')}
+				<Button
+					variant="ghost"
+					size="icon"
+					class="h-8 w-8"
+					onclick={() => scroll('left')}
 					aria-label="Scroll left"
 				>
-					<ChevronLeftIcon class="w-5 h-5" />
-				</button>
-				<button
-					class="btn btn-circle btn-sm btn-ghost"
-					on:click={() => scroll('right')}
+					<ChevronLeftIcon class="h-4 w-4" />
+				</Button>
+				<Button
+					variant="ghost"
+					size="icon"
+					class="h-8 w-8"
+					onclick={() => scroll('right')}
 					aria-label="Scroll right"
 				>
-					<ChevronRightIcon class="w-5 h-5" />
-				</button>
+					<ChevronRightIcon class="h-4 w-4" />
+				</Button>
 			</div>
 		{/if}
 	</div>
@@ -47,19 +53,19 @@
 	{#if loading}
 		<div class="flex gap-4 overflow-hidden">
 			{#each Array(4) as _}
-				<div class="skeleton h-80 w-80 shrink-0"></div>
+				<div class="bg-muted h-80 w-80 shrink-0 animate-pulse rounded-lg"></div>
 			{/each}
 		</div>
 	{:else if courses.length === 0}
-		<div class="card bg-base-200 shadow-lg">
-			<div class="card-body text-center">
-				<p class="text-base-content/60">No courses available in this section.</p>
-			</div>
-		</div>
+		<Card class="bg-secondary shadow-lg">
+			<CardContent class="py-8 text-center">
+				<p class="text-muted-foreground">No courses available in this section.</p>
+			</CardContent>
+		</Card>
 	{:else}
 		<div
 			bind:this={scrollContainer}
-			class="flex gap-6 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide"
+			class="scrollbar-hide flex snap-x snap-mandatory gap-6 overflow-x-auto pb-4"
 			style="scroll-behavior: smooth;"
 		>
 			{#each courses as course (course.id)}

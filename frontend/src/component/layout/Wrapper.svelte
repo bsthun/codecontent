@@ -6,6 +6,7 @@
 	import { scrollTop } from '$/util/scroll'
 	import type { Setup } from '$/util/type/setup'
 	import WebviewNotice from '$/component/screen/WebviewNotice.svelte'
+	import Loading from '$/component/interact/Loading.svelte'
 	import { backend } from '$/util/backend.ts'
 
 	scrollTop()
@@ -68,9 +69,7 @@
 
 <main>
 	{#if !$setup.initialized}
-		<div class="flex h-screen items-center justify-center">
-			<div class="loading loading-spinner text-primary"></div>
-		</div>
+		<Loading container={true} size="lg" />
 	{:else if properties.webview}
 		<WebviewNotice />
 	{:else}

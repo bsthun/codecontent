@@ -5,10 +5,12 @@
 	import type { PayloadCourseExtended } from '$/util/backend/backend'
 	import type { Setup } from '$/util/type/setup'
 	import Container from '$/component/layout/Container.svelte'
+	import Loading from '$/component/interact/Loading.svelte'
 	import CourseSection from './_component/CourseSection.svelte'
 	import SearchBox from './_component/SearchBox.svelte'
 	import CourseDialog from './_component/CourseDialog.svelte'
 	import { BookOpenIcon, PlusIcon } from 'lucide-svelte'
+	import { Button } from '$/lib/shadcn/components/button'
 
 	const setup = getContext<Writable<Setup>>('setup')
 	let userId: any = null
@@ -76,12 +78,13 @@
 
 	const fetchExploreCourses = () => {
 		loadingExplore = true
-		backend.courses.courseListExplore({
-			userId,
-			name: searchQuery,
-			limit,
-			offset,
-		})
+		backend.courses
+			.courseListExplore({
+				userId,
+				name: searchQuery,
+				limit,
+				offset,
+			})
 			.then((res) => {
 				exploreCourses = res.data.items
 				loadingExplore = false
@@ -102,7 +105,6 @@
 	}
 
 	const handleCourseCreated = () => {
-		// Refresh all course lists to show the new course
 		fetchAllCourses()
 	}
 
@@ -118,40 +120,34 @@
 </script>
 
 <Container class="min-h-screen py-8">
-	<!-- Header Section -->
 	<div class="mb-12">
-		<div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 mb-6">
+		<div class="mb-6 flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
 			<div class="flex items-center gap-4">
-				<div class="avatar placeholder">
-					<div class="bg-primary text-primary-content rounded-full w-16">
-						<BookOpenIcon class="w-8 h-8" />
-					</div>
+				<div class="bg-primary text-primary-foreground flex h-16 w-16 items-center justify-center rounded-full">
+					<BookOpenIcon class="h-8 w-8" />
 				</div>
 				<div>
-					<h1 class="text-4xl font-bold text-base-content mb-2">Course Content</h1>
-					<p class="text-base-content/70 text-lg">A personalized coding course content platform</p>
+					<h1 class="text-foreground mb-2 text-4xl font-bold">Course Content</h1>
+					<p class="text-muted-foreground text-lg">A personalized coding course content platform</p>
 				</div>
 			</div>
-			<button class="btn btn-primary gap-2 lg:btn-lg" onclick={handleNewCourse}>
-				<PlusIcon class="w-5 h-5" />
+			<Button class="gap-2 lg:px-8 lg:py-6" onclick={handleNewCourse}>
+				<PlusIcon class="h-5 w-5" />
 				New Course
-			</button>
+			</Button>
 		</div>
 
-		<!-- Search Box -->
 		<div class="max-w-2xl">
 			<SearchBox on:search={handleSearch} placeholder="Search courses..." value={searchQuery} />
 		</div>
 	</div>
 
 	{#if loadingUser}
-		<div class="flex justify-center items-center h-64">
-			<span class="loading loading-spinner loading-lg"></span>
+		<div class="flex h-64 items-center justify-center">
+			<Loading size="lg" />
 		</div>
 	{:else}
-		<!-- Course Sections -->
 		<div class="space-y-8">
-			<!-- Enrolled Courses Section -->
 			<CourseSection
 				title="My Enrolled Courses"
 				courses={enrolledCourses}
@@ -159,7 +155,6 @@
 				loading={loadingEnrolled}
 			/>
 
-			<!-- Managed Courses Section -->
 			<CourseSection
 				title="Courses I Manage"
 				courses={managedCourses}
@@ -167,7 +162,6 @@
 				loading={loadingManaged}
 			/>
 
-			<!-- Explore Section -->
 			<CourseSection
 				title="Explore Courses"
 				courses={exploreCourses}
@@ -178,5 +172,4 @@
 	{/if}
 </Container>
 
-<!-- Course Creation Dialog -->
 <CourseDialog bind:open={showCourseDialog} onCourseCreated={handleCourseCreated} />
