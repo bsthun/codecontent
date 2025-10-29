@@ -43,6 +43,8 @@ func Bind(
 	courses.Post("/list/manager", courseEndpoint.HandleCourseListManager)
 	courses.Post("/list/enroll", courseEndpoint.HandleCourseListEnroll)
 	courses.Post("/list/explore", courseEndpoint.HandleCourseListExplore)
+	courses.Post("/photo/list", courseEndpoint.HandlePhotoList)
+	courses.Post("/photo/upload", courseEndpoint.HandlePhotoUpload)
 
 	// * frontend
 	app.Get("*", func(c *fiber.Ctx) error {

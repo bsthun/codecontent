@@ -119,3 +119,32 @@ type CourseManageDetailResponse struct {
 	EnrollList  []*EnrollInfo  `json:"enrollList"`
 	ContentList []*ContentInfo `json:"contentList"`
 }
+
+type CoursePhotoListRequest struct {
+	CourseId *uint64 `json:"courseId" validate:"required"`
+	Limit    *uint64 `json:"limit"`
+	Offset   *uint64 `json:"offset"`
+}
+
+type CoursePhoto struct {
+	Id          *uint64    `json:"id"`
+	CourseId    *uint64    `json:"courseId"`
+	Title       *string    `json:"title"`
+	Description *string    `json:"description"`
+	PhotoUrl    *string    `json:"photoUrl"`
+	CreatedAt   *time.Time `json:"createdAt"`
+	UpdatedAt   *time.Time `json:"updatedAt"`
+}
+
+type CoursePhotoListResponse struct {
+	Items []*CoursePhoto `json:"items"`
+	Count *uint64        `json:"count"`
+}
+
+type CoursePhotoUploadRequest struct {
+	CourseId *uint64 `json:"courseId" validate:"required"`
+}
+
+type CoursePhotoUploadResponse struct {
+	Photo *CoursePhoto `json:"photo"`
+}

@@ -14,6 +14,12 @@ type Config struct {
 	FrontendUrl       *string           `yaml:"frontendUrl" validate:"required"`
 	Secret            *string           `yaml:"secret" validate:"required"`
 	PostgresDsn       *string           `yaml:"postgresDsn" validate:"required"`
+	QdrantDsn         *string           `yaml:"qdrantDsn" validate:"required"`
+	QdrantCollection  *string           `yaml:"qdrantCollection" validate:"required"`
+	MinioEndpoint     *string           `yaml:"minioEndpoint" validate:"required"`
+	MinioBucket       *string           `yaml:"minioBucket" validate:"required"`
+	MinioAccessKey    *string           `yaml:"minioAccessKey" validate:"required"`
+	MinioSecretKey    *string           `yaml:"minioSecretKey" validate:"required"`
 	OauthClientId     *string           `yaml:"oauthClientId" validate:"required"`
 	OauthClientSecret *string           `yaml:"oauthClientSecret" validate:"required"`
 	OauthEndpoint     *string           `yaml:"oauthEndpoint" validate:"required"`

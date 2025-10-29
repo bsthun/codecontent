@@ -6,12 +6,17 @@ import (
 	"backend/common/database"
 	"backend/common/fiber"
 	"backend/common/fiber/middleware"
+	"backend/common/minio"
+	"backend/common/qdrant"
 	"backend/endpoint"
 	courseEndpoint "backend/endpoint/course"
 	publicEndpoint "backend/endpoint/public"
 	stateEndpoint "backend/endpoint/state"
 	courseProcedure "backend/procedure/course"
 	permissionProcedure "backend/procedure/permission"
+	"backend/service/agent"
+	"backend/service/compute"
+	"backend/service/path"
 	"backend/type/common"
 	"embed"
 
@@ -34,10 +39,15 @@ func main() {
 				return frontend
 			},
 			config.Init,
-			agentic.Init,
 			database.Init,
+			qdrant.Init,
+			minio.Init,
+			agentic.Init,
 			fiber.Init,
 			middleware.Init,
+			compute.Serve,
+			agent.Serve,
+			path.Serve,
 			permissionProcedure.Proceed,
 			courseProcedure.Proceed,
 			publicEndpoint.Handle,
