@@ -1,9 +1,10 @@
 <script lang="ts">
 	import type { PayloadCourseExtended } from '$/util/backend/backend'
 	import CourseCard from './CourseCard.svelte'
+	import Loading from '$/component/interact/Loading.svelte'
 	import { ChevronLeftIcon, ChevronRightIcon } from 'lucide-svelte'
 	import { Button } from '$/lib/shadcn/components/button'
-	import { Card, CardContent } from '$/lib/shadcn/components/card'
+	import { Empty } from '$/lib/shadcn/components/empty'
 
 	export let title: string
 	export let courses: PayloadCourseExtended[]
@@ -51,17 +52,11 @@
 	</div>
 
 	{#if loading}
-		<div class="flex gap-4 overflow-hidden">
-			{#each Array(4) as _}
-				<div class="bg-muted h-80 w-80 shrink-0 animate-pulse rounded-lg"></div>
-			{/each}
-		</div>
+		<Loading container={true} />
 	{:else if courses.length === 0}
-		<Card class="bg-secondary shadow-lg">
-			<CardContent class="py-8 text-center">
-				<p class="text-muted-foreground">No courses available in this section.</p>
-			</CardContent>
-		</Card>
+		<Empty>
+			<p class="text-muted-foreground">No courses available in this section.</p>
+		</Empty>
 	{:else}
 		<div
 			bind:this={scrollContainer}

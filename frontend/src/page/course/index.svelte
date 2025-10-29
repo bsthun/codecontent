@@ -149,14 +149,14 @@
 	{:else}
 		<div class="space-y-8">
 			<CourseSection
-				title="My Enrolled Courses"
+				title="Enrolled Courses"
 				courses={enrolledCourses}
 				variant="enrolled"
 				loading={loadingEnrolled}
 			/>
 
 			<CourseSection
-				title="Courses I Manage"
+				title="Manage Courses"
 				courses={managedCourses}
 				variant="managed"
 				loading={loadingManaged}

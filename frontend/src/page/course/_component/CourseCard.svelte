@@ -37,7 +37,7 @@
 </script>
 
 <Card
-	class="cursor-pointer shadow-lg"
+	class="cursor-pointer shadow-lg pt-0"
 	onclick={handleClick}
 	onkeypress={(e) => e.key === 'Enter' && handleClick()}
 	role="button"
@@ -46,15 +46,15 @@
 	<div class="from-primary/20 to-secondary/20 relative h-48 rounded-t-lg bg-gradient-to-br">
 		{#if course.coursePhotoCount > 0}
 			<div class="absolute inset-0 flex items-center justify-center">
-				<ImageIcon class="text-muted-foreground/30 h-16 w-16" />
+				<ImageIcon class="text-muted-foreground h-16 w-16" />
 			</div>
 		{:else}
-			<div class="absolute inset-0 flex items-center justify-center">
-				<BookOpenIcon class="text-muted-foreground/30 h-16 w-16" />
+			<div class="absolute inset-0 flex items-center justify-center ">
+				<BookOpenIcon class="text-muted-foreground h-16 w-16" />
 			</div>
 		{/if}
 		{#if variant === 'managed'}
-			<span class="absolute top-[50%] right-4 rounded-full px-2 py-1 text-xs font-medium {getBadgeClasses()}">
+			<span class="absolute top-4 right-4 rounded-full px-2 py-1 text-xs font-medium {getBadgeClasses()}">
 				Manager
 			</span>
 		{:else if variant === 'enrolled'}
@@ -64,8 +64,8 @@
 		{/if}
 	</div>
 
-	<CardContent class="p-4">
-		<CardTitle class="mb-2 line-clamp-2 text-lg font-bold">
+	<CardContent>
+		<CardTitle class="line-clamp-2 text-lg font-bold">
 			{course.name}
 		</CardTitle>
 		<p class="text-muted-foreground mb-4 line-clamp-3 flex-grow text-sm">

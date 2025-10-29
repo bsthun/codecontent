@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { backend, catcher } from '$/util/backend'
-	import { XIcon } from '@lucide/svelte'
-	import { Dialog, DialogContent, DialogHeader, DialogTitle } from '$/lib/shadcn/components/dialog'
+	import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '$/lib/shadcn/components/dialog'
 	import { Button } from '$/lib/shadcn/components/button'
 	import Loading from '$/component/interact/Loading.svelte'
 
@@ -105,7 +104,7 @@
 				</div>
 			</div>
 
-			<div class="flex gap-3 pt-4">
+			<DialogFooter>
 				<Button type="button" variant="ghost" onclick={handleClose} disabled={isSubmitting}>Cancel</Button>
 				<Button type="submit" disabled={isSubmitting || !formData.name.trim() || !formData.description.trim()}>
 					{#if isSubmitting}
@@ -113,7 +112,7 @@
 					{/if}
 					Create Course
 				</Button>
-			</div>
+			</DialogFooter>
 		</form>
 	</DialogContent>
 </Dialog>

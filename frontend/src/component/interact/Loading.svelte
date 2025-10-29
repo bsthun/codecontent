@@ -22,7 +22,7 @@
 </script>
 
 {#if container}
-	<div class="flex min-h-screen items-center justify-center {className}">
+	<div class="flex min-w-0 flex-1 flex-col items-center justify-center gap-6 text-balance rounded-lg border-dashed p-6 text-center md:p-12 {className}">
 		<LoaderCircleIcon class="animate-spin {getSizeClasses()}" />
 	</div>
 {:else}
