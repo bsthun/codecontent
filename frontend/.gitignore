@@ -3,10 +3,10 @@
 
 # generate
 /src/util/backend
+/src/lib/shadcn/components
 
 # log
 *.log
-*-debug.log*
 
 # dependency
 node_modules/

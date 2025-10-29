@@ -6,15 +6,22 @@
 
 ## General
 
-- Do not add comment during implementation unless necessary
+- Do not add comment on anything during implementation unless complex logic is involved, and the comment must be
+  lowercase short text (not more than 5 words)
 - Run `bun run check` after implementation
 
 ## Design
 
 - Use `@lucide/svelte` for icons, import with `Icon` suffix, e.g., `import { XIcon } from '@lucide/svelte'`
-- Use `daisyui` for components library, see list of available components at https://daisyui.com/components/ which crawl
-  https://raw.githubusercontent.com/saadeghi/daisyui/refs/heads/master/packages/docs/src/routes/(routes)/components/button/+page.md
-  for full component documentation, change `button` in to other component as needed
+- Use shadcn UI components from `$/lib/shadcn/components/ui/`, e.g., `Card`, `Button`, etc.
+- Always crawl https://www.shadcn-svelte.com/docs/components/button-group.md for component usage before implementation,
+  replacing `button-group` with the component name you want to use.
+- If imported and component not exist, stop and tell back to install manually, do not install it yourself.
+
+## Interaction
+
+- Use `svelte-navigator` for routing, e.g., `<Link to="..."></Link` or
+  `import { useNavigate, useParams } from 'svelte-navigator'`
 
 ## Setup
 
@@ -56,7 +63,8 @@
 
 ## Component
 
-- Use `$props` store for all bindable props, e.g., `bind:open={$props.open}`
+- When implementing a feature, always break down into smaller components under `_component/` folder first
+- Use `$props` and `$bindable` for props implementation,
   ```
   import type { Snippet } from 'svelte'
   
