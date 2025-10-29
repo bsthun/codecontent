@@ -122,6 +122,9 @@ type CourseManageDetailResponse struct {
 
 type CoursePhotoListRequest struct {
 	CourseId *uint64 `json:"courseId" validate:"required"`
+	Title    *string `json:"title"`
+	Sort     *string `json:"sort"`
+	Order    *string `json:"order"`
 	Limit    *uint64 `json:"limit"`
 	Offset   *uint64 `json:"offset"`
 }

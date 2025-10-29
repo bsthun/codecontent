@@ -32,7 +32,7 @@ func (r *Handler) HandlePhotoList(c *fiber.Ctx) error {
 	}
 
 	// * call procedure
-	items, count, er := r.courseProcedure.CoursePhotoList(c.Context(), body.CourseId, body.Limit, body.Offset)
+	items, count, er := r.courseProcedure.CoursePhotoList(c.Context(), body.CourseId, body.Title, body.Sort, body.Order, body.Limit, body.Offset)
 	if er != nil {
 		return er
 	}

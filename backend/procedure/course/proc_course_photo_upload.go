@@ -23,22 +23,22 @@ func (r *Procedure) CoursePhotoUpload(ctx context.Context, courseId *uint64, ima
 	}()
 
 	// * create course photo
-	coursePhoto, er := querier.CoursePhotoCreate(ctx, &psql.CoursePhotoCreateParams{
+	coursePhoto, err := querier.CoursePhotoCreate(ctx, &psql.CoursePhotoCreateParams{
 		CourseId:    courseId,
 		Title:       gut.Ptr(""),
 		Description: gut.Ptr(""),
 	})
-	if er != nil {
+	if err != nil {
 		_ = tx.Rollback()
-		return nil, gut.Err(false, "failed to create course photo record", er)
+		return nil, gut.Err(false, "failed to create course photo record", err)
 	}
 
 	// * create buffer for tee reader
-	var buf bytes.Buffer
-	tee := io.TeeReader(imageReader, &buf)
+	buf := new(bytes.Buffer)
+	tee := io.TeeReader(imageReader, buf)
 
 	// * upload to minio
-	_, er = r.minio.PutObject(
+	_, err = r.minio.PutObject(
 		ctx,
 		*r.config.MinioBucket,
 		*r.pathService.CoursePhotoMinioPath(courseId, coursePhoto.Id),
@@ -48,16 +48,16 @@ func (r *Procedure) CoursePhotoUpload(ctx context.Context, courseId *uint64, ima
 			ContentType: "image/png",
 		},
 	)
-	if er != nil {
+	if err != nil {
 		_ = tx.Rollback()
-		return nil, gut.Err(false, "failed to upload to minio", er)
+		return nil, gut.Err(false, "failed to upload to minio", err)
 	}
 
 	// * compute embedding
-	embeddingResp, er := r.computeService.EmbedImage(&buf)
+	embeddingResp, er := r.computeService.EmbedImage(buf)
 	if er != nil {
 		_ = tx.Rollback()
-		return nil, gut.Err(false, "failed to get embedding", er)
+		return nil, gut.Err(false, "failed to get embedding", err)
 	}
 
 	// * insert embedding to qdrant
@@ -94,15 +94,15 @@ func (r *Procedure) CoursePhotoUpload(ctx context.Context, courseId *uint64, ima
 		},
 	}
 
-	_, er = r.qdrant.Upsert(ctx, &qdrant.UpsertPoints{
+	_, err = r.qdrant.Upsert(ctx, &qdrant.UpsertPoints{
 		CollectionName: *r.config.QdrantCollection,
 		Points: []*qdrant.PointStruct{
 			point,
 		},
 	})
-	if er != nil {
+	if err != nil {
 		_ = tx.Rollback()
-		return nil, gut.Err(false, "failed to upsert to qdrant", er)
+		return nil, gut.Err(false, "failed to upsert to qdrant", err)
 	}
 
 	// * construct photo url
@@ -116,19 +116,19 @@ func (r *Procedure) CoursePhotoUpload(ctx context.Context, courseId *uint64, ima
 	}
 
 	// * update course photo with generated title and description
-	updatedPhoto, er := querier.CoursePhotoUpdate(ctx, &psql.CoursePhotoUpdateParams{
+	updatedPhoto, err := querier.CoursePhotoUpdate(ctx, &psql.CoursePhotoUpdateParams{
 		Id:          coursePhoto.Id,
 		Title:       title,
 		Description: description,
 	})
-	if er != nil {
+	if err != nil {
 		_ = tx.Rollback()
-		return nil, gut.Err(false, "failed to update course photo", er)
+		return nil, gut.Err(false, "failed to update course photo", err)
 	}
 
 	// * commit transaction
-	if er := tx.Commit(); er != nil {
-		return nil, gut.Err(false, "failed to commit transaction", er)
+	if err := tx.Commit(); err != nil {
+		return nil, gut.Err(false, "failed to commit transaction", err)
 	}
 
 	// * construct final photo object

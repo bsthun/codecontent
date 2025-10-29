@@ -11,6 +11,7 @@
 	import CourseEditDialog from '../../_component/CourseEditDialog.svelte'
 	import CourseStatisticsCard from '../../_component/CourseStatisticsCard.svelte'
 	import CourseEnrollmentsCard from '../../_component/CourseEnrollmentsCard.svelte'
+	import PhotoGridCard from '../_component/PhotoGridCard.svelte'
 
 	export type Props = {
 		course: number
@@ -145,6 +146,8 @@
 			<CourseStatisticsCard courseData={courseDetail} />
 
 			<CourseEnrollmentsCard courseData={courseDetail} />
+
+			<PhotoGridCard courseId={course} />
 		</div>
 	{/if}
 </Container>

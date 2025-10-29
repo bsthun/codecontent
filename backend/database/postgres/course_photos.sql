@@ -23,8 +23,7 @@ WHERE id = $1
 RETURNING *;
 
 -- name: CoursePhotoList :many
-SELECT course_photos.id, course_photos.course_id, course_photos.title, course_photos.created_at, course_photos.updated_at,
-       courses.id, courses.name, courses.description, courses.prompt_instruction, courses.created_at, courses.updated_at,
+SELECT sqlc.embed(course_photos),
        (SELECT COALESCE(COUNT(*), 0)::BIGINT FROM content_section_photos WHERE content_section_photos.course_photo_id = course_photos.id) AS content_section_photo_count
 FROM course_photos
 LEFT JOIN courses ON course_photos.course_id = courses.id

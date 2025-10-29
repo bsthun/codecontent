@@ -1,7 +1,10 @@
 package agent
 
 import (
+	"backend/common/config"
+
 	"github.com/bsthun/gut"
+	"go.scnd.dev/open/model/agentic/package/call"
 )
 
 type Server interface {
@@ -9,8 +12,16 @@ type Server interface {
 }
 
 type Service struct {
+	config *config.Config
+	caller call.Caller
 }
 
-func Serve() Server {
-	return &Service{}
+func Serve(
+	config *config.Config,
+	caller call.Caller,
+) Server {
+	return &Service{
+		config: config,
+		caller: caller,
+	}
 }

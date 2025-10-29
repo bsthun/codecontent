@@ -1,7 +1,9 @@
 package path
 
 import (
+	"context"
 	"fmt"
+	"time"
 
 	"github.com/bsthun/gut"
 )
@@ -12,6 +14,19 @@ func (r *Service) CoursePhotoMinioPath(courseId *uint64, coursePhotoId *uint64) 
 }
 
 func (r *Service) CoursePhotoMinioUrl(courseId *uint64, coursePhotoId *uint64) *string {
-	url := fmt.Sprintf("%s/%s/%s", *r.config.MinioEndpoint, *r.config.MinioBucket, *r.CoursePhotoMinioPath(courseId, coursePhotoId))
+	// * generate presigned url
+	presignedUrl, err := r.minio.PresignedGetObject(
+		context.TODO(),
+		*r.config.MinioBucket,
+		*r.CoursePhotoMinioPath(courseId, coursePhotoId),
+		time.Hour,
+		nil,
+	)
+	if err != nil {
+		return nil
+	}
+
+	url := presignedUrl.String()
+
 	return &url
 }

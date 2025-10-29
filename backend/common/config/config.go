@@ -24,8 +24,9 @@ type Config struct {
 	OauthClientSecret *string           `yaml:"oauthClientSecret" validate:"required"`
 	OauthEndpoint     *string           `yaml:"oauthEndpoint" validate:"required"`
 	OpenaiBaseUrl     *string           `yaml:"openaiBaseUrl" validate:"required"`
-	OpenaiModel       *string           `yaml:"openaiModel" validate:"required"`
 	OpenaiApiKey      *string           `yaml:"openaiApiKey" validate:"required"`
+	OpenaiModel       *string           `yaml:"openaiModel" validate:"required"`
+	OpenaiVisionModel *string           `yaml:"openaiVisionModel" validate:"required"`
 	DockerUri         *string           `yaml:"dockerUri" validate:"required"`
 }
 

@@ -8,13 +8,16 @@ require (
 	github.com/coreos/go-oidc/v3 v3.16.0
 	github.com/getsentry/sentry-go v0.36.0
 	github.com/go-playground/validator/v10 v10.28.0
+	github.com/go-resty/resty/v2 v2.16.5
 	github.com/gofiber/fiber/v2 v2.52.9
 	github.com/gofiber/jwt/v3 v3.3.10
 	github.com/golang-jwt/jwt/v4 v4.5.2
+	github.com/google/uuid v1.6.0
 	github.com/lib/pq v1.10.9
 	github.com/lithammer/dedent v1.1.0
 	github.com/minio/minio-go/v7 v7.0.95
 	github.com/moby/moby/client v0.1.0-beta.2
+	github.com/nfnt/resize v0.0.0-20180221191011-83c6a9932646
 	github.com/pressly/goose/v3 v3.26.0
 	github.com/qdrant/go-client v1.15.2
 	github.com/sqlc-dev/pqtype v0.3.0
@@ -37,7 +40,6 @@ require (
 	github.com/containerd/errdefs v1.0.0 // indirect
 	github.com/containerd/errdefs/pkg v0.3.0 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
-	github.com/disintegration/imaging v1.6.2 // indirect
 	github.com/distribution/reference v0.6.0 // indirect
 	github.com/docker/go-connections v0.6.0 // indirect
 	github.com/docker/go-units v0.5.0 // indirect
@@ -60,9 +62,7 @@ require (
 	github.com/go-openapi/swag/yamlutils v0.25.1 // indirect
 	github.com/go-playground/locales v0.14.1 // indirect
 	github.com/go-playground/universal-translator v0.18.1 // indirect
-	github.com/go-resty/resty/v2 v2.16.5 // indirect
 	github.com/goccy/go-json v0.10.5 // indirect
-	github.com/google/uuid v1.6.0 // indirect
 	github.com/gookit/color v1.6.0 // indirect
 	github.com/klauspost/compress v1.18.1 // indirect
 	github.com/klauspost/cpuid/v2 v2.2.11 // indirect
@@ -76,7 +76,6 @@ require (
 	github.com/moby/docker-image-spec v1.3.1 // indirect
 	github.com/moby/moby/api v1.52.0-beta.2 // indirect
 	github.com/moby/term v0.5.2 // indirect
-	github.com/nfnt/resize v0.0.0-20180221191011-83c6a9932646 // indirect
 	github.com/openai/openai-go v1.12.0 // indirect
 	github.com/opencontainers/go-digest v1.0.0 // indirect
 	github.com/opencontainers/image-spec v1.1.1 // indirect
@@ -104,7 +103,6 @@ require (
 	go.uber.org/zap v1.27.0 // indirect
 	go.yaml.in/yaml/v3 v3.0.4 // indirect
 	golang.org/x/crypto v0.43.0 // indirect
-	golang.org/x/image v0.0.0-20191009234506-e7c1f5e7dbb8 // indirect
 	golang.org/x/mod v0.29.0 // indirect
 	golang.org/x/net v0.46.0 // indirect
 	golang.org/x/sync v0.17.0 // indirect
@@ -116,4 +114,4 @@ require (
 	google.golang.org/protobuf v1.34.2 // indirect
 )
 
-replace go.scnd.dev/open-model-agentic => /Volumes/Data/Repo/model-agentic
+replace go.scnd.dev/open/model/agentic => /Volumes/Data/Repo/model-agentic

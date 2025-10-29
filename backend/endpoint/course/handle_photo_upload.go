@@ -16,14 +16,8 @@ func (r *Handler) HandlePhotoUpload(c *fiber.Ctx) error {
 	// * get user claims
 	l := c.Locals("l").(*jwt.Token).Claims.(*common.LoginClaims)
 
-	// * extract course id
-	courseIdValue := c.FormValue("courseId")
-	if courseIdValue == "" {
-		return gut.Err(false, "course id is required", nil)
-	}
-
 	// * parse course id
-	courseId, err := gut.IdDecode(courseIdValue)
+	courseId, err := gut.IdDecode(c.FormValue("courseId"))
 	if err != nil {
 		return gut.Err(false, "invalid course id", err)
 	}
