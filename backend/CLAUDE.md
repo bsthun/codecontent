@@ -14,6 +14,7 @@
 - The project structure use one declaration per file as basis, e.g., one endpoint / procedure per file, except for
   construction which has `type Handler` / `func Handle`, `type Server interface` /  `type Service struct` /
   `func Serve` in one file.
+- For any unfamiliar package, use `go doc` to check usage and examples.
 
 ## Endpoint
 

@@ -18,7 +18,10 @@
 - Use shadcn components from `$/lib/shadcn/components/`, e.g., `Card`, `Button`, etc.
 - Always fetch https://www.shadcn-svelte.com/docs/components/button-group.md for example before implementation,
   replacing `button-group` with the component name you want to use.
-- If imported and component not exist, stop and tell back to install manually, do not install it yourself.
+- Available components: accordion, alert, alert-dialog, aspect-ratio, avatar, badge, breadcrumb, button, button-group,
+  card, carousel, checkbox, collapsible, command, data-table, dialog, drawer, dropdown-menu, empty, field, input,
+  input-group, item, label, menubar, pagination, popover, radio-group, resizable, scroll-area, select, separator, sheet,
+  sidebar, skeleton, spinner, switch, table, tabs, textarea
 
 ## Interaction
 

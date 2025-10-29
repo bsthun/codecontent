@@ -1,6 +1,6 @@
 -- name: CourseCreate :one
-INSERT INTO courses (name, description, prompt_instruction)
-VALUES ($1, $2, $3)
+INSERT INTO courses (name, description, prompt_instruction, token)
+VALUES ($1, $2, $3, $4)
 RETURNING *;
 
 -- name: CourseGet :one

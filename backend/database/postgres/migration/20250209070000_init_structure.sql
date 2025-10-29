@@ -30,8 +30,9 @@ CREATE TABLE courses
 (
     id                 BIGSERIAL PRIMARY KEY,
     name               VARCHAR(255) NOT NULL,
-    description        VARCHAR(255) NOT NULL ,
+    description        VARCHAR(255) NOT NULL,
     prompt_instruction VARCHAR(255) NOT NULL,
+    token              VARCHAR(16)  NOT NULL,
     created_at         TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at         TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP
 );

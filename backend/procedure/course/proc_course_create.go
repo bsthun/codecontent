@@ -23,6 +23,7 @@ func (r *Procedure) CourseCreate(ctx context.Context, name *string, description 
 		Name:              name,
 		Description:       description,
 		PromptInstruction: gut.Ptr(""),
+		Token:             gut.Random(gut.RandomSet.MixedAlphaNum, 16),
 	})
 	if err != nil {
 		_ = tx.Rollback()

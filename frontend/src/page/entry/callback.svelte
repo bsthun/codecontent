@@ -29,7 +29,9 @@
 			.then(() => {
 				toast.success('Successfully logged in')
 				$setup.reload().then(() => {
-					navigate('/')
+					setTimeout(() => {
+						navigate('/')
+					}, 1000)
 				})
 			})
 			.catch((err) => {
