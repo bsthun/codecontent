@@ -4,16 +4,23 @@
 	import type { Writable } from 'svelte/store'
 	import type { Setup } from '$/util/type/setup'
 	import { useLocation } from 'svelte-navigator'
+	import type { Snippet } from 'svelte'
+
+	export type Props = {
+		children?: Snippet
+	}
+
+	let { children }: Props = $props()
 
 	const setup = getContext<Writable<Setup>>('setup')
 	const location = useLocation()
 
 	let navbar = $state(false)
-	
+
 	$effect(() => {
 		navbar = !$location.pathname.startsWith('/admin') && !$location.pathname.startsWith('/project/')
 	})
-	
+
 	$effect(() => {
 		if (!$setup.profile.id) {
 			window.location.href = '/entry/login/'
@@ -26,6 +33,6 @@
 		<Navbar />
 	{/if}
 	<div>
-		<slot />
+		{@render children?.()}
 	</div>
 </div>

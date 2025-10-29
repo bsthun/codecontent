@@ -1,13 +1,8 @@
 <script lang="ts">
-	import { Link, navigate } from 'svelte-navigator'
-	import { getContext } from 'svelte'
-	import type { Writable } from 'svelte/store'
-	import type { Setup } from '$/util/type/setup'
+	import { Link } from 'svelte-navigator'
 	import { onMount } from 'svelte'
 
 	let scrolled = false
-
-	const setup = getContext<Writable<Setup>>('setup')
 
 	onMount(() => {
 		const handleScroll = () => {

@@ -19,7 +19,6 @@
 	}
 
 	const handleClick = () => {
-		// Navigate to course detail page (to be implemented)
 		console.log('Course clicked:', course.id)
 	}
 </script>

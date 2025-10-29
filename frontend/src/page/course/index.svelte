@@ -1,51 +1,36 @@
 <script lang="ts">
-	import { onMount } from 'svelte'
+	import { getContext, onMount } from 'svelte'
+	import type { Writable } from 'svelte/store'
 	import { backend, catcher } from '$/util/backend'
 	import type { PayloadCourseExtended } from '$/util/backend/backend'
+	import type { Setup } from '$/util/type/setup'
 	import Container from '$/component/layout/Container.svelte'
 	import CourseSection from './_component/CourseSection.svelte'
 	import SearchBox from './_component/SearchBox.svelte'
-	import { PlusIcon, BookOpenIcon } from 'lucide-svelte'
+	import CourseDialog from './_component/CourseDialog.svelte'
+	import { BookOpenIcon, PlusIcon } from 'lucide-svelte'
 
+	const setup = getContext<Writable<Setup>>('setup')
 	let userId: any = null
-	let searchQuery: string = ''
+	let searchQuery = $state('')
+	let showCourseDialog = $state(false)
 
 	// Course lists
-	let enrolledCourses: PayloadCourseExtended[] = []
-	let managedCourses: PayloadCourseExtended[] = []
-	let exploreCourses: PayloadCourseExtended[] = []
+	let enrolledCourses = $state<PayloadCourseExtended[]>([])
+	let managedCourses = $state<PayloadCourseExtended[]>([])
+	let exploreCourses = $state<PayloadCourseExtended[]>([])
 
 	// Loading states
-	let loadingEnrolled = true
-	let loadingManaged = true
-	let loadingExplore = true
-	let loadingUser = true
+	let loadingEnrolled = $state(true)
+	let loadingManaged = $state(true)
+	let loadingExplore = $state(true)
+	let loadingUser = $state(true)
 
 	// Pagination
 	const limit = 20
 	const offset = 0
 
-	onMount(() => {
-		fetchUserState()
-	})
-
-	const fetchUserState = () => {
-		loadingUser = true
-		backend.state
-			.state()
-			.then((res) => {
-				userId = res.data.userId
-				loadingUser = false
-				fetchAllCourses()
-			})
-			.catch((err) => {
-				catcher(err)
-				loadingUser = false
-			})
-	}
-
 	const fetchAllCourses = () => {
-		if (!userId) return
 		fetchEnrolledCourses()
 		fetchManagedCourses()
 		fetchExploreCourses()
@@ -91,13 +76,12 @@
 
 	const fetchExploreCourses = () => {
 		loadingExplore = true
-		backend.courses
-			.courseListExplore({
-				userId,
-				name: searchQuery,
-				limit,
-				offset,
-			})
+		backend.courses.courseListExplore({
+			userId,
+			name: searchQuery,
+			limit,
+			offset,
+		})
 			.then((res) => {
 				exploreCourses = res.data.items
 				loadingExplore = false
@@ -114,9 +98,23 @@
 	}
 
 	const handleNewCourse = () => {
-		// Navigate to create course page (to be implemented)
-		console.log('Create new course')
+		showCourseDialog = true
 	}
+
+	const handleCourseCreated = () => {
+		// Refresh all course lists to show the new course
+		fetchAllCourses()
+	}
+
+	onMount(() => {
+		setup.subscribe((setupData) => {
+			if (setupData?.profile?.id) {
+				userId = setupData.profile.id
+				loadingUser = false
+				fetchAllCourses()
+			}
+		})
+	})
 </script>
 
 <Container class="min-h-screen py-8">
@@ -134,7 +132,7 @@
 					<p class="text-base-content/70 text-lg">A personalized coding course content platform</p>
 				</div>
 			</div>
-			<button class="btn btn-primary gap-2 lg:btn-lg" on:click={handleNewCourse}>
+			<button class="btn btn-primary gap-2 lg:btn-lg" onclick={handleNewCourse}>
 				<PlusIcon class="w-5 h-5" />
 				New Course
 			</button>
@@ -142,7 +140,7 @@
 
 		<!-- Search Box -->
 		<div class="max-w-2xl">
-			<SearchBox value={searchQuery} on:search={handleSearch} placeholder="Search courses..." />
+			<SearchBox on:search={handleSearch} placeholder="Search courses..." value={searchQuery} />
 		</div>
 	</div>
 
@@ -179,3 +177,6 @@
 		</div>
 	{/if}
 </Container>
+
+<!-- Course Creation Dialog -->
+<CourseDialog bind:open={showCourseDialog} onCourseCreated={handleCourseCreated} />
