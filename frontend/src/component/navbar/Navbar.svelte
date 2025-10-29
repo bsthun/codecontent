@@ -26,7 +26,7 @@
 	<div class="flex h-16 items-center justify-between px-6 max-lg:px-4">
 		<div class="flex items-center">
 			<Link to="/">
-				<Button variant="ghost" class="h-auto px-2 py-1 text-lg font-normal">Code Content Manager</Button>
+				Code Content Manager
 			</Link>
 		</div>
 		<div class="flex flex-1 justify-center">

@@ -131,7 +131,7 @@
 					<p class="text-muted-foreground text-lg">A personalized coding course content platform</p>
 				</div>
 			</div>
-			<Button class="gap-2 lg:px-8 lg:py-6" onclick={handleNewCourse}>
+			<Button class="gap-2" onclick={handleNewCourse}>
 				<PlusIcon class="h-5 w-5" />
 				New Course
 			</Button>
