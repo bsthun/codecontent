@@ -5,17 +5,21 @@
 	import { Button } from '$/lib/shadcn/components/button'
 
 	export let course: PayloadCourseExtended
-	export let variant: 'enrolled' | 'managed' | 'explore' = 'explore'
+	export let variant: 'enroll' | 'manage' | 'explore' = 'explore'
 
 	const handleClick = () => {
-		console.log('Course clicked:', course.id)
+		if (variant === 'manage') {
+			window.location.href = `/course/manage/${course.id}`
+		} else {
+			console.log('Course clicked:', course.id)
+		}
 	}
 
 	const getBadgeClasses = () => {
 		switch (variant) {
-			case 'managed':
+			case 'manage':
 				return 'bg-primary text-primary-foreground'
-			case 'enrolled':
+			case 'enroll':
 				return 'bg-secondary text-secondary-foreground'
 			default:
 				return 'bg-muted text-muted-foreground'
@@ -26,9 +30,9 @@
 		switch (variant) {
 			case 'explore':
 				return 'default'
-			case 'enrolled':
+			case 'enroll':
 				return 'secondary'
-			case 'managed':
+			case 'manage':
 				return 'outline'
 			default:
 				return 'default'
@@ -53,11 +57,11 @@
 				<BookOpenIcon class="text-muted-foreground h-16 w-16" />
 			</div>
 		{/if}
-		{#if variant === 'managed'}
+		{#if variant === 'manage'}
 			<span class="absolute top-4 right-4 rounded-full px-2 py-1 text-xs font-medium {getBadgeClasses()}">
 				Manager
 			</span>
-		{:else if variant === 'enrolled'}
+		{:else if variant === 'enroll'}
 			<span class="absolute top-4 right-4 rounded-full px-2 py-1 text-xs font-medium {getBadgeClasses()}">
 				Enrolled
 			</span>
@@ -94,9 +98,9 @@
 		<div class="flex justify-end">
 			{#if variant === 'explore'}
 				<Button variant={getButtonVariant()} size="sm">Enroll Now</Button>
-			{:else if variant === 'enrolled'}
+			{:else if variant === 'enroll'}
 				<Button variant={getButtonVariant()} size="sm">Continue Learning</Button>
-			{:else if variant === 'managed'}
+			{:else if variant === 'manage'}
 				<Button variant={getButtonVariant()} size="sm">Manage Course</Button>
 			{/if}
 		</div>

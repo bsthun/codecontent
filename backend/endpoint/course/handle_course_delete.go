@@ -10,7 +10,7 @@ import (
 	"github.com/golang-jwt/jwt/v4"
 )
 
-func (r *Handler) HandleCourseDelete(c *fiber.Ctx) error {
+func (r *Handler) HandleCourseManageDelete(c *fiber.Ctx) error {
 	// * get user claims
 	l := c.Locals("l").(*jwt.Token).Claims.(*common.LoginClaims)
 
@@ -32,7 +32,7 @@ func (r *Handler) HandleCourseDelete(c *fiber.Ctx) error {
 	}
 
 	// * call procedure
-	course, er := r.courseProcedure.CourseDelete(c.Context(), body.CourseId)
+	course, er := r.courseProcedure.CourseManageDelete(c.Context(), body.CourseId)
 	if er != nil {
 		return er
 	}

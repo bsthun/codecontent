@@ -151,14 +151,14 @@
 			<CourseSection
 				title="Enrolled Courses"
 				courses={enrolledCourses}
-				variant="enrolled"
+				variant="enroll"
 				loading={loadingEnrolled}
 			/>
 
 			<CourseSection
 				title="Manage Courses"
 				courses={managedCourses}
-				variant="managed"
+				variant="manage"
 				loading={loadingManaged}
 			/>
 

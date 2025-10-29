@@ -9,7 +9,7 @@ import (
 	"github.com/bsthun/gut"
 )
 
-func (r *Procedure) CourseEdit(ctx context.Context, courseId *uint64, name *string, description *string, promptInstruction *string) (*payload.Course, *gut.ErrorInstance) {
+func (r *Procedure) CourseManageEdit(ctx context.Context, courseId *uint64, name *string, description *string, promptInstruction *string) (*payload.Course, *gut.ErrorInstance) {
 	// * query course update
 	course, err := r.database.P().CourseUpdate(ctx, &psql.CourseUpdateParams{
 		Id:                courseId,

@@ -10,7 +10,7 @@ import (
 	"github.com/golang-jwt/jwt/v4"
 )
 
-func (r *Handler) HandleCourseEdit(c *fiber.Ctx) error {
+func (r *Handler) HandleCourseManageEdit(c *fiber.Ctx) error {
 	// * get user claims
 	l := c.Locals("l").(*jwt.Token).Claims.(*common.LoginClaims)
 
@@ -32,7 +32,7 @@ func (r *Handler) HandleCourseEdit(c *fiber.Ctx) error {
 	}
 
 	// * call procedure
-	course, er := r.courseProcedure.CourseEdit(c.Context(), body.Id, body.Name, body.Description, body.PromptInstruction)
+	course, er := r.courseProcedure.CourseManageEdit(c.Context(), body.Id, body.Name, body.Description, body.PromptInstruction)
 	if er != nil {
 		return er
 	}

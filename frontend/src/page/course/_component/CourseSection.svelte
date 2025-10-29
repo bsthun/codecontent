@@ -8,7 +8,7 @@
 
 	export let title: string
 	export let courses: PayloadCourseExtended[]
-	export let variant: 'enrolled' | 'managed' | 'explore' = 'explore'
+	export let variant: 'enroll' | 'manage' | 'explore' = 'explore'
 	export let loading: boolean = false
 
 	let scrollContainer: HTMLDivElement

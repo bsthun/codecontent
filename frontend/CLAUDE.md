@@ -15,18 +15,22 @@
 ## Design
 
 - Use `@lucide/svelte` for icons, import with `Icon` suffix, e.g., `import { XIcon } from '@lucide/svelte'`
-- Use shadcn components from `$/lib/shadcn/components/`, e.g., `Card`, `Button`, etc.
 - Always fetch https://www.shadcn-svelte.com/docs/components/button-group.md for example before implementation,
   replacing `button-group` with the component name you want to use.
+- Change subcomponent `Card.Header` to `CardHeader` and `import { CardHeader } from '$/lib/shadcn/components/card'`
 - Available components: accordion, alert, alert-dialog, aspect-ratio, avatar, badge, breadcrumb, button, button-group,
   card, carousel, checkbox, collapsible, command, data-table, dialog, drawer, dropdown-menu, empty, field, input,
   input-group, item, label, menubar, pagination, popover, radio-group, resizable, scroll-area, select, separator, sheet,
   sidebar, skeleton, spinner, switch, table, tabs, textarea
+- Any form must use `field`, table use `data-table`, etc. Do not implement custom form or table and use shadcn
+  components as much as possible
 
 ## Interaction
 
 - Use `svelte-navigator` for routing, e.g., `<Link to="..."></Link>` or
   `import { useNavigate, useParams } from 'svelte-navigator'`
+- Do not use `window.location.href` and use `const navigate = useNavigate()` then `navigate('/path')` instead
+- Tries to use `<Link to="">` component instead of `navigate()` if possible
 - Use loading from `import Loading from '$/component/interact/Loading.svelte'` which have props container = false
 - (weather to add wrapper to use in page or not), class = '', size = 'md'
 
@@ -49,6 +53,9 @@
 
     ```ts
     import { backend, catcher } from '$/util/backend'
+    import type { Course } from '$/util/backend/backend.ts'
+  
+    const enrolledCourses = $state<Course[]>([])
 
     const fetchEnrolledCourses = () => {
     	loadingEnrolled = true
@@ -70,7 +77,7 @@
     }
     ```
 
-- `fetch#backendName#` function must called from `onMount` lifecycle hook
+- `fetch#backendName#` function must call from `onMount` lifecycle hook
 
 ## Component
 
@@ -90,3 +97,18 @@
     ```
 
 - Use {@render children()} for children rendering
+- For a page, use Props to read params, use `$state`, merge form or loading, `page` is main loading, into one object
+    ```
+    export type Props = {
+		course: number
+	}
+
+	const { course }: Props = $props()
+  
+	let courseDetail = $state<PayloadCourseManageDetailResponse>()
+	let loading = $state<Record<string, boolean>>({
+		page: true,
+		instruction: false,
+	})
+    ```
+- Implementation must create separate cards / dialog components, do not use `alert` or `confirm` browser built-in

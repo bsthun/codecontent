@@ -8,7 +8,7 @@ import (
 	"github.com/bsthun/gut"
 )
 
-func (r *Procedure) CourseDelete(ctx context.Context, courseId *uint64) (*payload.Course, *gut.ErrorInstance) {
+func (r *Procedure) CourseManageDelete(ctx context.Context, courseId *uint64) (*payload.Course, *gut.ErrorInstance) {
 	// * query course delete
 	course, err := r.database.P().CourseDelete(ctx, courseId)
 	if err != nil {
