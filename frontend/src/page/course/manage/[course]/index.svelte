@@ -107,15 +107,9 @@
 				Back to Courses
 			</Button>
 		</div>
-
-		<div class="flex items-center gap-4">
-			<div class="bg-primary text-primary-foreground flex h-16 w-16 items-center justify-center rounded-full">
-				<InfoIcon class="h-8 w-8" />
-			</div>
-			<div>
-				<h1 class="text-foreground mb-2 text-4xl font-bold">Course Management</h1>
-				<p class="text-muted-foreground text-lg">Manage course information and settings</p>
-			</div>
+		<div class="flex flex-col">
+			<h1 class="text-foreground mb-2 text-4xl font-bold">Course Management</h1>
+			<p class="text-muted-foreground text-lg">Manage course information and settings</p>
 		</div>
 	</div>
 
@@ -134,17 +128,19 @@
 		</div>
 	{:else}
 		<div class="space-y-6">
-			<CourseInfoCard
-				course={courseDetail.course}
-				onEdit={handleEditCourse}
-				onDelete={handleDeleteCourse}
-			/>
+			<div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
+				<CourseInfoCard
+					course={courseDetail.course}
+					onEdit={handleEditCourse}
+					onDelete={handleDeleteCourse}
+				/>
 
-			<PromptInstructionCard
-				promptInstruction={courseDetail.course.promptInstruction}
-				loading={loading.instruction}
-				onSave={handleSaveInstruction}
-			/>
+				<PromptInstructionCard
+					promptInstruction={courseDetail.course.promptInstruction}
+					loading={loading.instruction}
+					onSave={handleSaveInstruction}
+				/>
+			</div>
 
 			<CourseStatisticsCard courseData={courseDetail} />
 

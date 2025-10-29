@@ -20,10 +20,12 @@
 
 	let isSubmitting = $state(false)
 
-	if (course) {
-		formData.name = course.name
-		formData.description = course.description
-	}
+	$effect(() => {
+		if (course) {
+			formData.name = course.name
+			formData.description = course.description
+		}
+	})
 
 	const handleClose = () => {
 		if (!isSubmitting) {
