@@ -3,6 +3,7 @@ package endpoint
 import (
 	"backend/common/config"
 	"backend/common/fiber/middleware"
+	"backend/endpoint/content"
 	"backend/endpoint/course"
 	"backend/endpoint/public"
 	"backend/endpoint/state"
@@ -20,6 +21,7 @@ func Bind(
 	publicEndpoint *publicEndpoint.Handler,
 	stateEndpoint *stateEndpoint.Handler,
 	courseEndpoint *courseEndpoint.Handler,
+	contentEndpoint *contentEndpoint.Handler,
 	middleware *middleware.Middleware,
 ) {
 	api := app.Group("/api")
@@ -48,6 +50,7 @@ func Bind(
 
 	// * content endpoints
 	content := api.Group("/content", middleware.Jwt(true))
+	content.Post("/create", contentEndpoint.HandleContentCreate)
 	content.Post("/list", courseEndpoint.HandleContentList)
 
 	// * frontend

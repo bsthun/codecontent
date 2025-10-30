@@ -29,7 +29,7 @@
 
 - Use `svelte-navigator` for routing, e.g., `<Link to="..."></Link>` or
   `import { useNavigate, useParams } from 'svelte-navigator'`
-- Do not use `window.location.href` and use `const navigate = useNavigate()` then `navigate('/path')` instead
+- No `window.location.href` and use `const navigate = useNavigate()` then `navigate('/path')` instead
 - Tries to use `<Link to="">` component instead of `navigate()` if possible
 - Use loading from `import Loading from '$/component/interact/Loading.svelte'` which have props container = false
 - (weather to add wrapper to use in page or not), class = '', size = 'md'

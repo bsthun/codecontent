@@ -1,15 +1,17 @@
 <script lang="ts">
-	import { createEventDispatcher } from 'svelte'
 	import * as InputGroup from '$/lib/shadcn/components/input-group'
 	import { ArrowUpIcon } from '@lucide/svelte'
 	import { Separator } from '$/lib/shadcn/components/separator'
+	import { backend, catcher } from '$/util/backend'
+	import { useNavigate } from 'svelte-navigator'
+	import Loading from '$/component/interact/Loading.svelte'
 
 	export type Props = {
 		value?: string
 		placeholder?: string
 		disabled?: boolean
 		class?: string
-		onSubmit?: (value: string) => void
+		courseId: number
 	}
 
 	let {
@@ -17,23 +19,31 @@
 		placeholder = 'Enter your prompt...',
 		disabled = false,
 		class: className,
-		onSubmit
+		courseId
 	}: Props = $props()
 
-	const dispatch = createEventDispatcher<{
-		submit: string
-	}>()
+	const navigate = useNavigate()
+	let loading = $state(false)
 
 	const handleSubmit = () => {
-		if (value.trim() && !disabled) {
-			onSubmit?.(value)
-			dispatch('submit', value)
+		if (value.trim() && !disabled && !loading) {
+			loading = true
 
-			// Mock action as alert
-			alert(`Prompt sent: ${value}`)
-
-			// Clear input after submission
-			value = ''
+			backend.content
+				.contentCreate({
+					courseId,
+					prompt: value.trim()
+				})
+				.then((response) => {
+					const contentId = response.data.content.id
+					navigate(`/content/${contentId}/document`)
+				})
+				.catch((err) => {
+					catcher(err)
+				})
+				.finally(() => {
+					loading = false
+				})
 		}
 	}
 
@@ -59,10 +69,14 @@
 				variant="default"
 				class="rounded-full"
 				size="icon-xs"
-				disabled={disabled || !value.trim()}
+				disabled={disabled || !value.trim() || loading}
 				onclick={handleSubmit}
 			>
-				<ArrowUpIcon />
+				{#if loading}
+					<Loading container={false} size="sm" />
+				{:else}
+					<ArrowUpIcon />
+				{/if}
 				<span class="sr-only">Send</span>
 			</InputGroup.Button>
 		</InputGroup.Addon>

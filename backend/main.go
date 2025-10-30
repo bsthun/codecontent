@@ -9,9 +9,11 @@ import (
 	"backend/common/minio"
 	"backend/common/qdrant"
 	"backend/endpoint"
+	contentEndpoint "backend/endpoint/content"
 	courseEndpoint "backend/endpoint/course"
 	publicEndpoint "backend/endpoint/public"
 	stateEndpoint "backend/endpoint/state"
+	contentProcedure "backend/procedure/content"
 	courseProcedure "backend/procedure/course"
 	permissionProcedure "backend/procedure/permission"
 	"backend/service/agent"
@@ -50,9 +52,11 @@ func main() {
 			path.Serve,
 			permissionProcedure.Proceed,
 			courseProcedure.Proceed,
+			contentProcedure.Proceed,
 			publicEndpoint.Handle,
 			stateEndpoint.Handle,
 			courseEndpoint.Handle,
+			contentEndpoint.Handle,
 		),
 		fx.Invoke(
 			endpoint.Bind,

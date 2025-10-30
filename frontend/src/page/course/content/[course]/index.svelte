@@ -75,11 +75,7 @@
 		fetchContents(searchQuery, page)
 	}
 
-	const handlePromptSubmit = (prompt: string) => {
-		// Mock action - in real implementation, this would call an API
-		console.log('Prompt submitted:', prompt)
-	}
-
+	
 	onMount(() => {
 		fetchContents('', 1)
 	})
@@ -128,8 +124,6 @@
 				{/if}
 			</Empty.Root>
 		</div>
-
-	<!-- Content Grid -->
 	{:else}
 		<div class="space-y-6">
 			<div class="flex items-center justify-between">
@@ -151,7 +145,6 @@
 	{/if}
 </Container>
 
-<!-- Floating Action Bar -->
 {#if !loading}
 	<FloatingAction>
 		<div class="flex flex-col gap-4">
@@ -166,7 +159,7 @@
 			/>
 			<PromptInput
 				placeholder="Prompt new content..."
-				onSubmit={handlePromptSubmit}
+				courseId={course}
 			/>
 		</div>
 	</FloatingAction>

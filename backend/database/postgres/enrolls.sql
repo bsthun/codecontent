@@ -46,3 +46,10 @@ FROM enrolls
 WHERE (sqlc.narg(course_id)::BIGINT IS NULL OR enrolls.course_id = sqlc.narg(course_id)::BIGINT)
   AND (sqlc.narg(user_id)::BIGINT IS NULL OR enrolls.user_id = sqlc.narg(user_id)::BIGINT);
 
+-- name: EnrollGetOrCreate :one
+INSERT INTO enrolls (course_id, user_id)
+VALUES ($1, $2)
+ON CONFLICT (course_id, user_id) DO UPDATE SET
+    updated_at = CURRENT_TIMESTAMP
+RETURNING *;
+
