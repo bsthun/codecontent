@@ -84,7 +84,7 @@
 			{#if course.courseManagerCount > 0}
 				<div class="flex items-center gap-1" title="Course managers">
 					<UsersIcon class="h-4 w-4" />
-					<span>{course.courseManagerCount} managers</span>
+					<span>{course.courseManagerCount}</span>
 				</div>
 			{/if}
 			{#if course.coursePhotoCount > 0}
