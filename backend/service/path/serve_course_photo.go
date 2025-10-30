@@ -9,7 +9,7 @@ import (
 )
 
 func (r *Service) CoursePhotoMinioPath(courseId *uint64, coursePhotoId *uint64) *string {
-	path := fmt.Sprintf("/course/%s/photo/%s.png", gut.Base62(*courseId), gut.Base62(*coursePhotoId))
+	path := fmt.Sprintf("course/%s/photo/%s.png", gut.Base62(*courseId), gut.Base62(*coursePhotoId))
 	return &path
 }
 

@@ -151,3 +151,18 @@ type CoursePhotoUploadRequest struct {
 type CoursePhotoUploadResponse struct {
 	Photo *CoursePhoto `json:"photo"`
 }
+
+type ContentListRequest struct {
+	CourseId *uint64 `json:"courseId" validate:"required"`
+	UserId   *uint64 `json:"userId"`
+	Title    *string `json:"title"`
+	Sort     *string `json:"sort"`
+	Order    *string `json:"order"`
+	Limit    *uint64 `json:"limit"`
+	Offset   *uint64 `json:"offset"`
+}
+
+type ContentListResponse struct {
+	Items []*ContentInfo `json:"items"`
+	Count *uint64        `json:"count"`
+}

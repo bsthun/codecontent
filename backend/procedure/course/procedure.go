@@ -25,6 +25,7 @@ type Proc interface {
 	CourseListExplore(ctx context.Context, userId *uint64, name *string, limit *uint64, offset *uint64) ([]*payload.CourseExtended, *uint64, *gut.ErrorInstance)
 	CoursePhotoList(ctx context.Context, courseId *uint64, title *string, sort *string, order *string, limit *uint64, offset *uint64) ([]*payload.CoursePhoto, *uint64, *gut.ErrorInstance)
 	CoursePhotoUpload(ctx context.Context, courseId *uint64, imageReader io.Reader) (*payload.CoursePhoto, *gut.ErrorInstance)
+	ContentList(ctx context.Context, courseId *uint64, userId *uint64, title *string, sort *string, order *string, limit *uint64, offset *uint64) ([]*payload.ContentInfo, *uint64, *gut.ErrorInstance)
 }
 
 type Procedure struct {

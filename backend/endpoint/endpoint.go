@@ -46,6 +46,10 @@ func Bind(
 	courses.Post("/photo/list", courseEndpoint.HandlePhotoList)
 	courses.Post("/photo/upload", courseEndpoint.HandlePhotoUpload)
 
+	// * content endpoints
+	content := api.Group("/content", middleware.Jwt(true))
+	content.Post("/list", courseEndpoint.HandleContentList)
+
 	// * frontend
 	app.Get("*", func(c *fiber.Ctx) error {
 		filePath := filepath.Join(".local/dist", c.Path())

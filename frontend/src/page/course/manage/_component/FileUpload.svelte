@@ -195,9 +195,6 @@
 
 			<div class="space-y-1">
 				<p class="text-sm font-medium {color}">{statusText}</p>
-				{#if uploadStatus === 'idle'}
-					<p class="text-muted-foreground text-xs">PNG, JPG, GIF up to 10MB</p>
-				{/if}
 			</div>
 
 			{#if uploadStatus === 'uploading'}

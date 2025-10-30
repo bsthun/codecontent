@@ -34,7 +34,10 @@
 			.photoList({
 				courseId,
 				limit: itemsPerPage,
-				offset: (currentPage - 1) * itemsPerPage
+				offset: (currentPage - 1) * itemsPerPage,
+				sort: 'createdAt',
+				order: 'desc',
+				title: ''
 			})
 			.then((response) => {
 				photos = response.data.items

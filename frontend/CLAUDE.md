@@ -22,8 +22,8 @@
   card, carousel, checkbox, collapsible, command, data-table, dialog, drawer, dropdown-menu, empty, field, input,
   input-group, item, label, menubar, pagination, popover, radio-group, resizable, scroll-area, select, separator, sheet,
   sidebar, skeleton, spinner, switch, table, tabs, textarea
-- Any form must use `field`, table use `data-table`, etc. Do not implement custom form or table and use shadcn
-  components as much as possible
+- Any form must use `field`, table use `data-table`, empty state use `empty` etc. Do not implement custom form or table
+  and use shadcn components as much as possible
 
 ## Interaction
 

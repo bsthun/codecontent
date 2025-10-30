@@ -28,7 +28,7 @@
 
 		<Card>
 			<CardHeader>
-				<CardTitle class="text-lg">Course Content</CardTitle>
+				<CardTitle class="text-lg">Contents</CardTitle>
 			</CardHeader>
 			<CardContent>
 				<div class="text-3xl font-bold">
