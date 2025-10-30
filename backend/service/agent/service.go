@@ -9,6 +9,7 @@ import (
 
 type Server interface {
 	FunctionPhotoDescription(imageUrl string) (*string, *string, *gut.ErrorInstance)
+	FunctionGenerateTitle(prompt string) (*string, *gut.ErrorInstance)
 }
 
 type Service struct {

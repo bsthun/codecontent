@@ -10,6 +10,12 @@ import (
 )
 
 func (r *Procedure) ContentCreate(ctx context.Context, enrollId *uint64, prompt *string) (*payload.Content, *gut.ErrorInstance) {
+	// * generate title from prompt
+	title, er := r.agentService.FunctionGenerateTitle(*prompt)
+	if er != nil {
+		return nil, er
+	}
+
 	// * begin transaction
 	tx, querier := r.database.Ptx(ctx, nil)
 	defer func() {
@@ -21,7 +27,7 @@ func (r *Procedure) ContentCreate(ctx context.Context, enrollId *uint64, prompt 
 	// * query content create
 	content, err := querier.ContentCreate(ctx, &psql.ContentCreateParams{
 		EnrollId: enrollId,
-		Title:    prompt,
+		Title:    title,
 	})
 	if err != nil {
 		_ = tx.Rollback()

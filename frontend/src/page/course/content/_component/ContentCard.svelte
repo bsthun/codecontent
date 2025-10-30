@@ -20,7 +20,7 @@
 		<CardHeader>
 			<div class="flex items-start justify-between">
 				<div class="flex-1 min-w-0">
-					<CardTitle class="text-lg leading-tight group-hover:text-primary transition-colors duration-200">
+					<CardTitle class="leading-tight group-hover:text-primary transition-colors duration-200 mt-1">
 						{content.title}
 					</CardTitle>
 				</div>

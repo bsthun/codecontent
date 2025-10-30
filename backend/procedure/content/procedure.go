@@ -2,6 +2,7 @@ package contentProcedure
 
 import (
 	"backend/common/config"
+	"backend/service/agent"
 	"backend/type/common"
 	"backend/type/payload"
 	"context"
@@ -14,16 +15,19 @@ type Proc interface {
 }
 
 type Procedure struct {
-	config   *config.Config
-	database common.Database
+	config       *config.Config
+	database     common.Database
+	agentService agent.Server
 }
 
 func Proceed(
 	config *config.Config,
 	database common.Database,
+	agentService agent.Server,
 ) Proc {
 	return &Procedure{
-		config:   config,
-		database: database,
+		config:       config,
+		database:     database,
+		agentService: agentService,
 	}
 }
