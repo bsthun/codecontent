@@ -41,3 +41,24 @@ type ContentDetailResponse struct {
 	Content  *Content          `json:"content"`
 	Sections []*ContentSection `json:"sections"`
 }
+
+type ContentLog struct {
+	Id        *uint64    `json:"id"`
+	ContentId *uint64    `json:"contentId"`
+	Action    *string    `json:"action"`
+	Prompt    *string    `json:"prompt"`
+	Call      *string    `json:"call"`
+	CreatedAt *time.Time `json:"createdAt"`
+	UpdatedAt *time.Time `json:"updatedAt"`
+}
+
+type ContentLogListRequest struct {
+	ContentId *uint64 `json:"contentId" validate:"required"`
+	Limit     *uint64 `json:"limit"`
+	Offset    *uint64 `json:"offset"`
+}
+
+type ContentLogListResponse struct {
+	Items []*ContentLog `json:"items"`
+	Count *uint64       `json:"count"`
+}

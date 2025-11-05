@@ -23,7 +23,7 @@ WHERE id = $1
 RETURNING *;
 
 -- name: ContentLogList :many
-SELECT content_logs.id, content_logs.content_id, content_logs.created_at, content_logs.updated_at,
+SELECT sqlc.embed(content_logs),
        contents.id, contents.enroll_id, contents.title, contents.created_at, contents.updated_at
 FROM content_logs
 LEFT JOIN contents ON content_logs.content_id = contents.id
@@ -41,4 +41,5 @@ OFFSET COALESCE(sqlc.narg('offset')::BIGINT, 0);
 SELECT COALESCE(COUNT(*), 0)::BIGINT AS content_log_count
 FROM content_logs
 WHERE (sqlc.narg(content_id)::BIGINT IS NULL OR content_logs.content_id = sqlc.narg(content_id)::BIGINT);
+
 

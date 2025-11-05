@@ -53,6 +53,7 @@ func Bind(
 	content.Post("/create", contentEndpoint.HandleContentCreate)
 	content.Post("/detail", contentEndpoint.HandleContentDetail)
 	content.Post("/list", courseEndpoint.HandleContentList)
+	content.Post("/log/list", contentEndpoint.HandleContentLogList)
 
 	// * frontend
 	app.Get("*", func(c *fiber.Ctx) error {
