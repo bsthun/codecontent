@@ -10,6 +10,7 @@ import (
 type Proc interface {
 	Act(ctx context.Context, userId *uint64, requestedUserId *uint64) *gut.ErrorInstance
 	CourseManage(ctx context.Context, userId *uint64, courseId *uint64, level *string) *gut.ErrorInstance
+	ContentAccess(ctx context.Context, userId *uint64, contentId *uint64) *gut.ErrorInstance
 }
 
 type Procedure struct {

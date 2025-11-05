@@ -51,6 +51,7 @@ func Bind(
 	// * content endpoints
 	content := api.Group("/content", middleware.Jwt(true))
 	content.Post("/create", contentEndpoint.HandleContentCreate)
+	content.Post("/detail", contentEndpoint.HandleContentDetail)
 	content.Post("/list", courseEndpoint.HandleContentList)
 
 	// * frontend

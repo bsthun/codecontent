@@ -1,6 +1,6 @@
 -- name: ContentLogCreate :one
-INSERT INTO content_logs (content_id, prompt, call)
-VALUES ($1, $2, $3)
+INSERT INTO content_logs (content_id, action, prompt, call)
+VALUES ($1, $2, $3, $4)
 RETURNING *;
 
 -- name: ContentLogGet :one

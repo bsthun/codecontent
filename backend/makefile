@@ -5,6 +5,7 @@ generate: init sqlc vert swagger mock
 
 .PHONY: init
 init:
+	mkdir -p generate/convert
 	mkdir -p .local/dist
 	touch .local/dist/index.html
 

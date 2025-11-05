@@ -83,6 +83,7 @@ CREATE TABLE content_logs
 (
     id         BIGSERIAL PRIMARY KEY,
     content_id BIGINT REFERENCES contents (id) ON DELETE CASCADE NOT NULL,
+    action     VARCHAR(64)                                       NOT NULL,
     prompt     TEXT                                              NOT NULL,
     call       JSONB                                             NOT NULL,
     created_at TIMESTAMP                                         NOT NULL DEFAULT CURRENT_TIMESTAMP,

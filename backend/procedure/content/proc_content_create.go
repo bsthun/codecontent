@@ -37,6 +37,7 @@ func (r *Procedure) ContentCreate(ctx context.Context, enrollId *uint64, prompt 
 	// * query content log create
 	_, err = querier.ContentLogCreate(ctx, &psql.ContentLogCreateParams{
 		ContentId: content.Id,
+		Action:    gut.Ptr("initial"),
 		Prompt:    prompt,
 		Call:      []byte("{}"),
 	})

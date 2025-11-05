@@ -12,6 +12,7 @@ import (
 
 type Proc interface {
 	ContentCreate(ctx context.Context, enrollId *uint64, prompt *string) (*payload.Content, *gut.ErrorInstance)
+	ContentDetail(ctx context.Context, contentId *uint64) (*payload.ContentDetailResponse, *gut.ErrorInstance)
 }
 
 type Procedure struct {
