@@ -2,6 +2,7 @@
 	import { onMount } from 'svelte'
 	import { ArrowLeftIcon, FileTextIcon } from '@lucide/svelte'
 	import { Button } from '$/lib/shadcn/components/button'
+	import { Link } from 'svelte-navigator'
 	import Container from '$/component/layout/Container.svelte'
 	import Loading from '$/component/interact/Loading.svelte'
 	import { backend, catcher } from '$/util/backend'
@@ -85,10 +86,12 @@
 	<!-- Header -->
 	<div class="mb-8">
 		<div class="mb-6 flex items-center gap-4">
-			<Button class="gap-2" href="/course/manage/{course}" size="sm" variant="ghost">
-				<ArrowLeftIcon class="h-4 w-4" />
-				Back to Manage
-			</Button>
+			<Link to="/course/manage/{course}">
+				<Button class="gap-2" size="sm" variant="ghost">
+					<ArrowLeftIcon class="h-4 w-4" />
+					Back to Manage
+				</Button>
+			</Link>
 		</div>
 		<div class="flex flex-col">
 			<h1 class="text-foreground mb-2 text-4xl font-bold">Course Content</h1>

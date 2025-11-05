@@ -3,7 +3,7 @@
 	import { getContext } from 'svelte'
 	import type { Writable } from 'svelte/store'
 	import type { Setup } from '$/util/type/setup'
-	import { useLocation } from 'svelte-navigator'
+	import { useLocation, useNavigate } from 'svelte-navigator'
 	import type { Snippet } from 'svelte'
 
 	export type Props = {
@@ -14,6 +14,7 @@
 
 	const setup = getContext<Writable<Setup>>('setup')
 	const location = useLocation()
+	const navigate = useNavigate()
 
 	let navbar = $state(false)
 
@@ -23,7 +24,7 @@
 
 	$effect(() => {
 		if (!$setup.profile.id) {
-			window.location.href = '/entry/login/'
+			navigate('/entry/login/')
 		}
 	})
 </script>

@@ -13,8 +13,9 @@ type Server interface {
 }
 
 type Service struct {
-	config *config.Config
-	caller call.Caller
+	config    *config.Config
+	caller    call.Caller
+	ExtraArgs map[string]any
 }
 
 func Serve(
@@ -24,5 +25,10 @@ func Serve(
 	return &Service{
 		config: config,
 		caller: caller,
+		ExtraArgs: map[string]any{
+			"thinking": map[string]any{
+				"type": "disabled",
+			},
+		},
 	}
 }

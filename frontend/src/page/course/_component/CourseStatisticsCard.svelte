@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { Card, CardHeader, CardTitle, CardContent } from '$/lib/shadcn/components/card'
 	import { Button } from '$/lib/shadcn/components/button'
+	import { Link } from 'svelte-navigator'
 	import { UsersIcon, FileTextIcon } from '@lucide/svelte'
 	import type { PayloadCourseManageDetailResponse } from '$/util/backend/backend'
 
@@ -20,10 +21,12 @@
 			<CardHeader>
 				<div class="flex items-center justify-between">
 					<CardTitle class="text-lg">Enrolled Students</CardTitle>
-					<Button href="/course/manage/{courseData.course.id}/enroll" variant="outline" size="sm" class="gap-1">
-						<UsersIcon class="h-3 w-3" />
-						View
-					</Button>
+					<Link to="/course/manage/{courseData.course.id}/enroll">
+						<Button variant="outline" size="sm" class="gap-1">
+							<UsersIcon class="h-3 w-3" />
+							View
+						</Button>
+					</Link>
 				</div>
 			</CardHeader>
 			<CardContent>
@@ -38,10 +41,12 @@
 			<CardHeader>
 				<div class="flex items-center justify-between">
 					<CardTitle class="text-lg">Contents</CardTitle>
-					<Button href="/course/content/{courseData.course.id}" variant="outline" size="sm" class="gap-1">
-						<FileTextIcon class="h-3 w-3" />
-						View
-					</Button>
+					<Link to="/course/content/{courseData.course.id}">
+						<Button variant="outline" size="sm" class="gap-1">
+							<FileTextIcon class="h-3 w-3" />
+							View
+						</Button>
+					</Link>
 				</div>
 			</CardHeader>
 			<CardContent>

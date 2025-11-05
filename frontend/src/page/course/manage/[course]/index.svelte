@@ -2,10 +2,12 @@
 	import { onMount } from 'svelte'
 	import { ArrowLeftIcon, InfoIcon, Loader2Icon } from '@lucide/svelte'
 	import { Button } from '$/lib/shadcn/components/button'
+	import { Link } from 'svelte-navigator'
 	import Container from '$/component/layout/Container.svelte'
 	import { backend, catcher } from '$/util/backend'
 	import type { PayloadCourseManageDetailResponse } from '$/util/backend/backend'
 	import { toast } from 'svelte-sonner'
+	import { useNavigate } from 'svelte-navigator'
 	import CourseInfoCard from '../../_component/CourseInfoCard.svelte'
 	import PromptInstructionCard from '../../_component/PromptInstructionCard.svelte'
 	import CourseEditDialog from '../../_component/CourseEditDialog.svelte'
@@ -18,6 +20,7 @@
 	}
 
 	const { course }: Props = $props()
+	const navigate = useNavigate()
 	let courseDetail = $state<PayloadCourseManageDetailResponse>()
 	let showEditDialog = $state(false)
 	let loading = $state<Record<string, boolean>>({
@@ -60,7 +63,7 @@
 			.courseManageDelete({ courseId: courseDetail.course.id })
 			.then(() => {
 				toast.success('Course deleted successfully')
-				window.location.href = '/course'
+				navigate('/course')
 			})
 			.catch((err) => {
 				catcher(err)
@@ -103,10 +106,12 @@
 <Container class="min-h-screen py-8">
 	<div class="mb-8">
 		<div class="mb-6 flex items-center gap-4">
-			<Button class="gap-2" href="/course" size="sm" variant="ghost">
-				<ArrowLeftIcon class="h-4 w-4" />
-				Back to Courses
-			</Button>
+			<Link to="/course">
+				<Button class="gap-2" size="sm" variant="ghost">
+					<ArrowLeftIcon class="h-4 w-4" />
+					Back to Courses
+				</Button>
+			</Link>
 		</div>
 		<div class="flex flex-col">
 			<h1 class="text-foreground mb-2 text-4xl font-bold">Course Management</h1>
@@ -123,9 +128,11 @@
 			<InfoIcon class="mb-4 h-16 w-16 text-gray-400" />
 			<h3 class="mb-2 text-lg font-semibold">Course not found</h3>
 			<p class="text-muted-foreground mb-4">The course you're looking for doesn't exist</p>
-			<Button href="/course">
-				Back to Courses
-			</Button>
+			<Link to="/course">
+				<Button>
+					Back to Courses
+				</Button>
+			</Link>
 		</div>
 	{:else}
 		<div class="space-y-6">

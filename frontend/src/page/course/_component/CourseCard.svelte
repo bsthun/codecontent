@@ -3,13 +3,18 @@
 	import { BookOpenIcon, UsersIcon, ImageIcon } from 'lucide-svelte'
 	import { Card, CardContent, CardTitle } from '$/lib/shadcn/components/card'
 	import { Button } from '$/lib/shadcn/components/button'
+	import { useNavigate } from 'svelte-navigator'
 
 	export let course: PayloadCourseExtended
 	export let variant: 'enroll' | 'manage' | 'explore' = 'explore'
 
+	const navigate = useNavigate()
+
 	const handleClick = () => {
 		if (variant === 'manage') {
-			window.location.href = `/course/manage/${course.id}`
+			navigate(`/course/manage/${course.id}`)
+		} else if (variant === 'enroll') {
+			navigate(`/content/${course.id}/document`)
 		} else {
 			console.log('Course clicked:', course.id)
 		}

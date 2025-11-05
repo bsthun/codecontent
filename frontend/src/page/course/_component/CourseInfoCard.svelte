@@ -57,7 +57,6 @@
 	</CardHeader>
 	<CardContent>
 		<div class="space-y-6">
-			<!-- Invite Link Section -->
 			<div class="space-y-3">
 				<div class="flex items-center gap-2">
 					<LinkIcon class="h-4 w-4 text-muted-foreground" />

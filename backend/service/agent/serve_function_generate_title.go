@@ -10,18 +10,19 @@ import (
 func (r *Service) FunctionGenerateTitle(prompt string) (*string, *gut.ErrorInstance) {
 	// * prepare request
 	request := &call.Request{
-		Model:     r.config.OpenaiModel,
-		MaxTokens: gut.Ptr(64),
-		Messages: []*call.Message{
-			{
-				Role: gut.Ptr("user"),
+		Model:       r.config.OpenaiModel,
+		MaxTokens:   gut.Ptr(64),
+		ExtraFields: r.ExtraArgs,
+		Messages: []call.Message{
+			&call.UserMessage{
 				Content: gut.Ptr("Generate a short, descriptive title (max 32 characters) for content based on this prompt: " + prompt +
 					"The title should be concise but informative. Response in json `{ \"title\": string }`"),
 			},
 		},
+		Tools: nil,
 	}
 
-	// * prepare option for structured output
+	// * prepare option
 	option := &call.Option{
 		SchemaName:        gut.Ptr("TitleGenerationResult"),
 		SchemaDescription: gut.Ptr("Content title generation result"),
